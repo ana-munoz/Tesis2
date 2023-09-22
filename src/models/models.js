@@ -64,6 +64,26 @@ window.CustomStrategyObject = function (name, type) {
                 return mxUtils.clone(this);
             };
         };
+window.CustomTacticObject = function (name, type) {
+            this.name = name || 'New Tactic';
+            this.type = type || '<<Tactic>>';
+            this.customShape = 'tacticShape';
+            this.with = '120';
+            this.height = '40';
+            this.clone = function () {
+                return mxUtils.clone(this);
+            }
+}
+window.CustomObjObject = function (name, type) {
+    this.name = name || 'New Objective';
+    this.type = type || '<<Objective>>';
+    this.customShape = 'objShape';
+    this.with = '120';
+    this.height = '40';
+    this.clone = function () {
+        return mxUtils.clone(this);
+    }
+}
 
             
     //CustomInfluenceObject (edge)

@@ -185,7 +185,28 @@ window.CustomUserObject = function (name, type) {
                     return mxUtils.clone(this);
                 };
             };
+    //CustomTacticObject (Vertex)
+    window.CustomTacticObject = function (name, type) {
+                this.name = name || 'New Tactic';
+                this.type = type || '<<Tactic>>';
+                this.customShape = 'tacticShape';
+                this.width = '120';
+                this.height = '40';
+                this.clone = function () {
+                    return mxUtils.clone(this);
+                };
+            };
 
+    window.CustomObjObject = function (name, type) {
+                this.name = name || 'New Objective';
+                this.type = type || '<<Objective>>';
+                this.customShape = 'objShape';
+                this.width = '120';
+                this.height = '40';
+                this.clone = function () {
+                    return mxUtils.clone(this);
+                }
+    }
             
     //CustomInfluenceObject (edge)
     window.CustomInfluenceObject = function (name, type) {
@@ -267,10 +288,10 @@ window.CustomUserObject = function (name, type) {
                                     if(targetCell.isVertex()){ 
                                         let model = graph.getModel();                                        
                                         model.beginUpdate();
-                                        
+                                        //AQUÍ SE ARMA EL CONTAINER QUE PIERDE EL MONO Y HACE EL ANIDADO
                                         try{
                                             if(targetCell.getChildCount()<2){
-                                                targetCell.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;';
+                                                targetCell.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=0;opacity=50;verticalAlign=top;align=left;';
                                                 
                                             }
                                         
@@ -293,7 +314,7 @@ window.CustomUserObject = function (name, type) {
 
                                     }
                                 }
-                            }              
+                            }               
                         }
                    }                
                 );
@@ -329,12 +350,12 @@ window.CustomUserObject = function (name, type) {
                         v1.geometry.y = parseInt(pt.y);
                         v1.geometry.width = parseInt(obj.width);
                         v1.geometry.height = parseInt(obj.height);
-                        v1.style='shape='+obj.customShape+';fillColor=#33C9FA;strokeColor=#000000;strokeWidth=3;resizable=0;';
+                        v1.style='shape='+obj.customShape+';fillColor=#33C9FA;strokeColor=#000000;strokeWidth=3;resizable=0;'; //Al hacer resizable esto en verdad solo lo hace con el texto
                         //v1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 300);
                        
                        //Set child to parent and parent's styles
                        if(newParent!=null && newParent.isVertex()){
-                                newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50';
+                                newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;';
                                 v1.geometry.relative=false;
                                 v1.geometry.x = 200;// parseInt(pt.x);
                                 v1.geometry.y = 200;//parseInt(pt.y);
@@ -380,6 +401,16 @@ window.CustomUserObject = function (name, type) {
                     let obj = new window.CustomStrategyObject();
                     dragCallBackFunct(graph, evt, obj);
                 };
+
+                let dragTacticCallBackFunct = function (graph, evt) {
+                    let obj = new window.CustomTacticObject();
+                    dragCallBackFunct(graph, evt, obj);
+                }
+
+                let dragObjCallBackFunct = function (graph, evt) {
+                    let obj = new window.CustomObjObject();
+                    dragCallBackFunct(graph, evt, obj);
+                }
 
                 /** SIDEBAR ICONS */
                     // Creates the image which is used as the sidebar icon (drag source)
@@ -456,17 +487,36 @@ window.CustomUserObject = function (name, type) {
                 strategyWrapper.style.alignItems = 'center';
                 strategyWrapper.style.justifyContent = 'center';
                 //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                strategyWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/strategy.png></div>';
+                strategyWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.png></div>';
                 sidebaricons.appendChild(strategyWrapper);
-                
-       
-                
-                
-                
 
-               
+                let tacticWrapper = document.createElement('div');
+                tacticWrapper.style.cursor = 'pointer';
+                tacticWrapper.style.margin = '10px';
+                tacticWrapper.style.width = '60px';
+                tacticWrapper.style.height = '60px';
+                tacticWrapper.style.textAlign = 'center';
+                tacticWrapper.style.display = 'flex';
+                tacticWrapper.style.flexWrap = 'wrap';
+                tacticWrapper.style.alignItems = 'center';
+                tacticWrapper.style.justifyContent = 'center';
+                //strategyWrapper.style.border = '1px dashed #C0C0C0';
+                tacticWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.gif></div>';
+                sidebaricons.appendChild(tacticWrapper);
 
-             
+                let objWrapper = document.createElement('div');
+                objWrapper.style.cursor = 'pointer';
+                objWrapper.style.margin = '10px';
+                objWrapper.style.width = '60px';
+                objWrapper.style.height = '60px';
+                objWrapper.style.textAlign = 'center';
+                objWrapper.style.display = 'flex';
+                objWrapper.style.flexWrap = 'wrap';
+                objWrapper.style.alignItems = 'center';
+                objWrapper.style.justifyContent = 'center';
+                //strategyWrapper.style.border = '1px dashed #C0C0C0';
+                objWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/objetivo.png></div>';
+                sidebaricons.appendChild(objWrapper);
 
                 // Creates the image which is used as the drag icon (preview)
                 let dragImageActor = actorWrapper.cloneNode(true);
@@ -474,6 +524,8 @@ window.CustomUserObject = function (name, type) {
                 let dragImageRole = roleWrapper.cloneNode(true);
                 let dragImageGoal = goalWrapper.cloneNode(true);
                 let dragImageStrategy = strategyWrapper.cloneNode(true);
+                let dragImageTactic = tacticWrapper.cloneNode(true);
+                let dragImageObj = objWrapper.cloneNode(true);
 
 
                 // Makes  the sidebar icons dragable
@@ -482,6 +534,8 @@ window.CustomUserObject = function (name, type) {
                 mxUtils.makeDraggable(roleWrapper, graph, dragRoleCallBackFunct, dragImageRole);
                 mxUtils.makeDraggable(goalWrapper, graph, dragGoalCallBackFunct, dragImageGoal);
                 mxUtils.makeDraggable(strategyWrapper, graph, dragStrategyCallBackFunct, dragImageStrategy);
+                mxUtils.makeDraggable(tacticWrapper, graph, dragTacticCallBackFunct, dragImageTactic);
+                mxUtils.makeDraggable(objWrapper, graph, dragObjCallBackFunct, dragImageObj);
             },
             
             
@@ -496,13 +550,13 @@ window.CustomUserObject = function (name, type) {
                     //STYLES FOR EDITOR CONTAINER
                     let container = document.getElementById('container');
                     container.style.position = 'absolute';
-                    container.style.overflow = 'scroll';
+                    container.style.overflow = 'no-scroll';
                     container.style.left = '100px';
                     container.style.top = '0px';
                     container.style.right = '0px';
                     container.style.bottom = '0px';
-                    container.style.width = '1000px';
-                    container.style.height = '600px';
+                    container.style.width = 'auto';
+                    container.style.height = 'auto';
                     container.style.background = `url("${require('../assets/grid.gif')}")`;
 
                     //STYLES FOR SIDEBAR CONTAINER   --- OLD                    
@@ -535,7 +589,7 @@ window.CustomUserObject = function (name, type) {
                     cellTracker = new mxCellTracker(editor.graph, 'blue');
                     
                     mxGraphView.prototype.updateStyle = true;
-
+                    
                     // global connection management
                     mxConnectionHandler.prototype.connectImage = new mxImage(mxImageBasePath +'/connector.png', 16, 16);
                     editor.graph.setConnectable(true);
@@ -550,8 +604,8 @@ window.CustomUserObject = function (name, type) {
                     //DRAG OFFSET
                     mxDragSource.prototype.dragOffset = 0;
 
-
-
+                     
+                    /* AQUÍ ES QUE SE DEFINE LA CAJA EN QUE SE COLAPSAN LOS ANIDADOS */
                     // Settings for grouping and folding
                     editor.graph.collapsedImage = new mxImage(mxImageBasePath +'/collapsed.png', 18, 16);
                     editor.graph.expandedImage = new mxImage(mxImageBasePath +'/expanded.png', 16, 16);
@@ -620,12 +674,11 @@ window.CustomUserObject = function (name, type) {
                         if (cell && this.isHtmlLabel(cell) && cell.value) {
                             //TODO here is the html code for the contents of the Field
                             let label = '';
-                            label += '<div style="width: 100%;display: block; justify-content: space-between;align-items: center">';            
+                            label += '<div style="width: 100%;display: flex; justify-content: flex-start; align-items: baseline">';            
                             label += '<div style="width: 100%;margin: 0px; font-weight: 600">' +
                                 '<strong>' + mxUtils.htmlEntities(cell.value.name, false) + '</strong>' +
                                 '</div>';
                             label += '</div>';
-
                             return label
                         }
 

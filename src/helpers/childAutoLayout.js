@@ -8,8 +8,9 @@ function childAutoLayout(graph, cell){
     // Disables global features
     
     graph.collapseToPreferredSize = false; //Specifies that the cell size should not be changed to the preferred size when a cell is first collapsed.  Default is true.
-    graph.constrainChildren = false; //Childs are not constrained to their parents
-    graph.cellsSelectable = false; //Childs are not selectable
+    graph.constrainChildren = true; //Childs are not constrained to their parents
+    graph.constrainGroupByChildren = true;
+    graph.cellsSelectable = true; //Childs are not selectable
     graph.extendParentsOnAdd = false; //Extend parents size
     graph.extendParents = false; //Extend parents size
     graph.border = 10; // NO SE
@@ -45,13 +46,13 @@ function childAutoLayout(graph, cell){
         {
             if (cell.parent != graph.model.root)
             {
-                layout.resizeParent = true;
+                layout.resizeParent = false;
                 layout.horizontal = false;
                 layout.spacing = 1;
             }
             else
             {
-                layout.resizeParent = true;
+                layout.resizeParent = false;
                 layout.horizontal = true;
                 layout.spacing = 1;
             }

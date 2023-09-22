@@ -355,7 +355,7 @@ window.CustomUserObject = function (name, type) {
                        
                        //Set child to parent and parent's styles
                        if(newParent!=null && newParent.isVertex()){
-                                newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;';
+                                newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;spacingLeft=40;spacingTop=10;';
                                 v1.geometry.relative=false;
                                 v1.geometry.x = 200;// parseInt(pt.x);
                                 v1.geometry.y = 200;//parseInt(pt.y);

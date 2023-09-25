@@ -8,14 +8,16 @@
         -->
         <!-- div for side bar-->
         <div id="sidebar">
-            <div id="panelTitle" style="height: 30px;font-family: Arial, Helvetica, sans-serif; color: #ffffff;vertical-align:baseline;">
-                <p >Lite*</p>
+            <div id="panelTitle"
+                style="height: 30px;font-family: Arial, Helvetica, sans-serif; color: #ffffff;vertical-align:baseline;">
+                <p>Lite*</p>
             </div>
             <div id="icons">
             </div>
-            <div id="hotKeys" style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #C0C0C0;vertical-align:baseline;">
-            <i class="fas fa-th" aria-hidden="true"></i>
-            <strong>HotKeys</strong>
+            <div id="hotKeys"
+                style="font-family: Arial, Helvetica, sans-serif; font-size: 10px; color: #C0C0C0;vertical-align:baseline;">
+                <i class="fas fa-th" aria-hidden="true"></i>
+                <strong>HotKeys</strong>
                 <p>Delete: backspace</p>
                 <p>Cut: ctrl/cmd + x</p>
                 <p>Copy: ctrl/cmd + c</p>
@@ -31,8 +33,8 @@
         <div id="container" style="background-color:#000000;">
 
         </div>
-        
-           <!-- <EditForm ref="form" @change="changeObjectValues" :cell-data="currentCell"/> -->
+
+        <!-- <EditForm ref="form" @change="changeObjectValues" :cell-data="currentCell"/> -->
     </div>
 </template>
 
@@ -50,6 +52,7 @@
     import childAutoLayout from "../helpers/childAutoLayout";
     import morphLayout from "../helpers/childAutoLayout";
     import customShapes from "../helpers/customShapes";
+    import zoom from "../helpers/zoom";
     //import loadModels from "../models/models";
 
 
@@ -277,8 +280,8 @@ window.CustomUserObject = function (name, type) {
                                 }
                             }
                             
-                        },
-                        mouseUp: function(sender, me){   
+                    },
+                    mouseUp: function(sender, me){   
                             //detects the target cell for drag&drop
                             var targetCell = me.getCell() ;
                             
@@ -296,7 +299,7 @@ window.CustomUserObject = function (name, type) {
                                             }
                                         
                                             graph.addCell(sourceCell,targetCell);
- 
+    
 
                                             sourceCell.geometry.x = 200;
                                             sourceCell.geometry.y = 200;
@@ -308,10 +311,9 @@ window.CustomUserObject = function (name, type) {
                                             model.endUpdate();
                                         }
                                     
-                                    graph.setSelectionCell(sourceCell);
-                                    sourceCell = null;
-                                    targetCell = null;
-
+                                        graph.setSelectionCell(sourceCell);
+                                        sourceCell = null;
+                                        targetCell = null;
                                     }
                                 }
                             }               
@@ -707,11 +709,9 @@ window.CustomUserObject = function (name, type) {
                     undo(editor.graph);
                     //Init autolayout:
                     autoLayout(editor.graph);
-                    
 
-
-
-
+                    //Init Zoom:
+                    zoom(editor.graph);
 }
             },
         // settings

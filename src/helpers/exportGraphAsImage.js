@@ -111,3 +111,36 @@
 				}));
 			}
 		};*/
+
+function exportGraphAsImage(graph) {{
+	  var imgExport = new mxImageExport();
+      var graphView = graph.getView();
+      var bounds = graphView.getGraphBounds();
+      var scale = graphView.getScale();
+
+      var canvas = imgExport.createCanvas(bounds.width * scale, bounds.height * scale);
+      var ctx = canvas.getContext('2d');
+
+      ctx.scale(scale, scale);
+      ctx.translate(-bounds.x, -bounds.y);
+
+      imgExport.drawState(graph.getView().getState(graph.model.root), canvas);
+
+      // Convert canvas to a data URL
+      var imageDataURL = canvas.toDataURL('image/png');
+
+      // You can now save or display the imageDataURL as needed
+      console.log(imageDataURL);
+
+      // Optionally, you can create a link to download the image
+      var link = document.createElement('a');
+      link.href = imageDataURL;
+      link.download = 'graph.png';
+      link.click();
+    }
+
+    // Add a click event listener to the export button
+    var exportButton = document.getElementById('exportButton');
+    exportButton.addEventListener('click', exportGraphAsImage);
+		  }
+		  export default exportGraphAsImage;

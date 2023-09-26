@@ -82,8 +82,8 @@ window.CustomObjObject = function (name, type) {
     this.height = '40';
     this.clone = function () {
         return mxUtils.clone(this);
-    }
-}
+    };
+};
 
             
     //CustomInfluenceObject (edge)
@@ -95,3 +95,12 @@ window.CustomInfluenceObject = function (name, type) {
                 return mxUtils.clone(this);
             };
         };
+
+window.CustomRefinObject = function (name, type) {
+    this.name = name || 'New Refinamiento';
+    this.type = type || '<<Refinamiento>>';
+    this.customShape = 'refinShape';
+    this.clone = function () {
+        return mxUtils.clone(this);
+    };
+};

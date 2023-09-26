@@ -53,6 +53,7 @@
     import morphLayout from "../helpers/childAutoLayout";
     import customShapes from "../helpers/customShapes";
     import zoom from "../helpers/zoom";
+    import exportGraphAsImage from "../helpers/exportGraphAsImage"
     //import loadModels from "../models/models";
 
 
@@ -123,7 +124,7 @@
 
     //load Models
     // CustomUserObject
-window.CustomUserObject = function (name, type) {
+    window.CustomUserObject = function (name, type) {
     this.name = name || 'New Name';
     this.type = type || '<<New Type>>';
     this.clone = function () {
@@ -220,7 +221,16 @@ window.CustomUserObject = function (name, type) {
                     return mxUtils.clone(this);
                 };
             };
+    //CustomRefinObject (edge)
 
+    window.CustomRefinObject = function (name, type) {
+        this.name = name || 'New Refinamiento';
+        this.type = type || '<<Refinamiento>>';
+        this.customShape = 'refinShape';
+        this.clone = function () {
+            return mxUtils.clone(this);
+        };
+    };
 
 
     //VUE component
@@ -299,8 +309,7 @@ window.CustomUserObject = function (name, type) {
                                             }
                                         
                                             graph.addCell(sourceCell,targetCell);
-    
-
+                                            
                                             sourceCell.geometry.x = 200;
                                             sourceCell.geometry.y = 200;
                                             
@@ -371,125 +380,10 @@ window.CustomUserObject = function (name, type) {
                     } finally {
                         model.endUpdate();
                     }
-                    /* EXPORT AS IMAGE */
-                    /***********************************/
-                    document.body.appendChild(mxUtils.button('Export SVG', function()
-				    {
-					var background = '#ffffff';
-					//var scale = 1;
-					var border = 1;
-					
-					var imgExport = new mxImageExport();
-					var bounds = graph.getGraphBounds();
-					//var vs = graph.view.scale;
-
-					// Prepares SVG document that holds the output
-					var svgDoc = mxUtils.createXmlDocument();
-					var root = (svgDoc.createElementNS != null) ?
-				    		svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
-				    
-					if (background != null)
-					{
-						if (root.style != null)
-						{
-							root.style.backgroundColor = background;
-						}
-						else
-						{
-							root.setAttribute('style', 'background-color:' + background);
-						}
-					}
-				    
-					if (svgDoc.createElementNS == null)
-					{
-				    	root.setAttribute('xmlns', mxConstants.NS_SVG);
-				    	root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
-					}
-					else
-					{
-						// KNOWN: Ignored in IE9-11, adds namespace for each image element instead. No workaround.
-						root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
-					}
-					
-					root.setAttribute('width', (Math.ceil(bounds.width * scale / vs) + 2 * border) + 'px');
-					root.setAttribute('height', (Math.ceil(bounds.height * scale / vs) + 2 * border) + 'px');
-					root.setAttribute('version', '1.1');
-					
-				    // Adds group for anti-aliasing via transform
-					var group = (svgDoc.createElementNS != null) ?
-							svgDoc.createElementNS(mxConstants.NS_SVG, 'g') : svgDoc.createElement('g');
-					group.setAttribute('transform', 'translate(0.5,0.5)');
-					root.appendChild(group);
-					svgDoc.appendChild(root);
-
-				    // Renders graph. Offset will be multiplied with state's scale when painting state.
-					var svgCanvas = new mxSvgCanvas2D(group);
-					svgCanvas.translate(Math.floor((border / scale - bounds.x) / vs), Math.floor((border / scale - bounds.y) / vs));
-					svgCanvas.scale(scale / vs);
-
-					// Displayed if a viewer does not support foreignObjects (which is needed to HTML output)
-					svgCanvas.foAltText = '[Not supported by viewer]';
-					imgExport.drawState(graph.getView().getState(graph.model.root), svgCanvas);
-
-					var xml = encodeURIComponent(mxUtils.getXml(root));
-					new mxXmlRequest('/Echo', 'filename=export.svg&format=svg' + '&xml=' + xml).simulate(document, '_blank');
-				}));
-				
-				function exportFile(format)
-				{
-					var bg = '#ffffff';
-					var scale = 1;
-					var b = 1;
-					
-					var imgExport = new mxImageExport();
-					var bounds = graph.getGraphBounds();
-					var vs = graph.view.scale;
-					
-					// New image export
-					var xmlDoc = mxUtils.createXmlDocument();
-					var root = xmlDoc.createElement('output');
-					xmlDoc.appendChild(root);
-					
-					// Renders graph. Offset will be multiplied with state's scale when painting state.
-					var xmlCanvas = new mxXmlCanvas2D(root);
-					xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
-					xmlCanvas.scale(scale / vs);
-					
-					imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-
-					// Puts request data together
-					var w = Math.ceil(bounds.width * scale / vs + 2 * b);
-					var h = Math.ceil(bounds.height * scale / vs + 2 * b);
-					
-					var xml = mxUtils.getXml(root);
-						
-					if (bg != null)
-					{
-						bg = '&bg=' + bg;
-					}
-					
-					new mxXmlRequest('/Export', 'filename=export.' + format + '&format=' + format +
-	        			bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).
-	        			simulate(document, '_blank');
-				}
-				
-				// Exporting to bitmap using ExportServlet
-				document.body.appendChild(mxUtils.button('Export PNG', function()
-				{
-					exportFile('png');
-				}));
-				
-				// Exporting to PDF using ExportServlet
-				document.body.appendChild(mxUtils.button('Export PDF', function()
-				{
-					exportFile('pdf');
-				}));
-			
 
                     graph.setSelectionCell(v1);
                 };
 
-                
 
                 /** CALLBACK FOR SPECIFIC VERTEX*/
                 //Passes type of node depending on dragged icon
@@ -711,7 +605,7 @@ window.CustomUserObject = function (name, type) {
                     editor.graph.setConnectable(true);
                     editor.graph.setCellsDisconnectable(true);
                     editor.graph.setPanning(true);
-                    editor.graph.setAllowDanglingEdges(false);
+                    editor.graph.setAllowDanglingEdges(true);
 
                     editor.graph.centerZoom = false;
                     editor.graph.setDropEnabled(true);
@@ -741,24 +635,42 @@ window.CustomUserObject = function (name, type) {
                         console.log('flecha', evt.getProperty('cell'));
                         console.log('origen', evt.getProperty('cell').source.getValue('type'));
                         console.log('destino', evt.getProperty('cell').target.getValue('type'));
+                        
+                        var edge = evt.getProperty('cell');
+                        let edgevalue1 = new window.CustomInfluenceObject();
+                        let edgevalue2 = new window.CustomRefinObject();
+                        
+                        //goal a estrategia, estrategia a tactica, tactica a objetivo
+                        if((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Goal"))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy")))
+                        ||((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy")))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic")))
+                        ||((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic")))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective"))))                    
+                        {                                         
+                            edge.value=edgevalue2;
+                            edgevalue2.removeSelection = 0;
+                            edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;dashPattern=8 8;';   
+                        }
+                        
+                        //actor a agente
+                        if(((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Actor")))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Agent"))))
+                        {
+                            edge.value=edgevalue1;
+                            edgevalue1.removeSelection = 0;
+                            edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';   
+                        }
+
                         editor.graph.stopEditing(true);
                         sourceCell = null;
-                        var edge = evt.getProperty('cell');
-                        let edgevalue = new window.CustomInfluenceObject();
-                        edge.value=edgevalue;
-                        edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
-
-
 
                     });
 
 
                     // CHANGE CELLS VALUES IN A EDITOR
                     
-                    editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => {
-                        
-
-                        
+                    editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => { 
                         this.selectionChanged();
                     });
                     this.selectionChanged();
@@ -770,7 +682,7 @@ window.CustomUserObject = function (name, type) {
                     };
 
                     // not editable
-                    editor.graph.isCellEditable = function () {
+                    editor.graph.isCellEditable = function () { //tiene que ser editable porque sino no se puede cambiar el nombre del constructo
                         return false
                     };
                     
@@ -778,6 +690,7 @@ window.CustomUserObject = function (name, type) {
                     editor.graph.convertValueToString = function (cell) {
                         if (cell.value != null && cell.value.name != null) {
                             return cell.value.name;
+                            
                         }
                         return mxGraph.prototype.convertValueToString.apply(this, arguments); // "supercall"
                     };
@@ -800,7 +713,6 @@ window.CustomUserObject = function (name, type) {
 
                         return mxGraph.prototype.getLabel.apply(this, arguments); // "supercall"
                     };
-
                     
                     // Adds sidebar icons 
                     
@@ -826,8 +738,118 @@ window.CustomUserObject = function (name, type) {
 
                     //Init Zoom:
                     zoom(editor.graph);
-
                     
+                    //exportGraphAsImage(graph);
+
+                    /* EXPORT AS IMAGE */
+                    /***********************************/
+                    document.body.appendChild(mxUtils.button('Export SVG', function()
+				    {
+                        var background = '#ffffff';
+                        var scale = 1;
+                        var border = 1;
+                        
+                        var imgExport = new mxImageExport();
+                        var bounds = graph.getGraphBounds();
+                        var vs = graph.view.scale;
+
+                        // Prepares SVG document that holds the output
+                        var svgDoc = mxUtils.createXmlDocument();
+                        var root = (svgDoc.createElementNS != null) ?
+                                svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
+                        
+                        if (background != null)
+                        {
+                            if (root.style != null)
+                            {
+                                root.style.backgroundColor = background;
+                            }
+                            else
+                            {
+                                root.setAttribute('style', 'background-color:' + background);
+                            }
+                        }
+                        
+                        if (svgDoc.createElementNS == null)
+                        {
+                            root.setAttribute('xmlns', mxConstants.NS_SVG);
+                            root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
+                        }
+                        else
+                        {
+                            // KNOWN: Ignored in IE9-11, adds namespace for each image element instead. No workaround.
+                            root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
+                        }
+                        
+                        root.setAttribute('width', (Math.ceil(bounds.width * scale / vs) + 2 * border) + 'px');
+                        root.setAttribute('height', (Math.ceil(bounds.height * scale / vs) + 2 * border) + 'px');
+                        root.setAttribute('version', '1.1');
+                        
+                        // Adds group for anti-aliasing via transform
+                        var group = (svgDoc.createElementNS != null) ?
+                                svgDoc.createElementNS(mxConstants.NS_SVG, 'g') : svgDoc.createElement('g');
+                        group.setAttribute('transform', 'translate(0.5,0.5)');
+                        root.appendChild(group);
+                        svgDoc.appendChild(root);
+
+                        // Renders graph. Offset will be multiplied with state's scale when painting state.
+                        var svgCanvas = new mxSvgCanvas2D(group);
+                        svgCanvas.translate(Math.floor((border / scale - bounds.x) / vs), Math.floor((border / scale - bounds.y) / vs));
+                        svgCanvas.scale(scale / vs);
+
+                        // Displayed if a viewer does not support foreignObjects (which is needed to HTML output)
+                        svgCanvas.foAltText = '[Not supported by viewer]';
+                        imgExport.drawState(graph.getView().getState(graph.model.root), svgCanvas);
+
+                        var xml = encodeURIComponent(mxUtils.getXml(root));
+                        new mxXmlRequest('/Echo', 'filename=export.svg&format=svg' + '&xml=' + xml).simulate(document, '_blank');
+				    }));
+				
+                    function exportFile(format)
+                    {
+                        var bg = '#ffffff';
+                        var scale = 1;
+                        var b = 1;
+                        
+                        var imgExport = new mxImageExport();
+                        var bounds = graph.getGraphBounds();
+                        var vs = graph.view.scale;
+                        
+                        // New image export
+                        var xmlDoc = mxUtils.createXmlDocument();
+                        var root = xmlDoc.createElement('output');
+                        xmlDoc.appendChild(root);
+                        
+                        // Renders graph. Offset will be multiplied with state's scale when painting state.
+                        var xmlCanvas = new mxXmlCanvas2D(root);
+                        xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
+                        xmlCanvas.scale(scale / vs);
+                        
+                        imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
+
+                        // Puts request data together
+                        var w = Math.ceil(bounds.width * scale / vs + 2 * b);
+                        var h = Math.ceil(bounds.height * scale / vs + 2 * b);
+                        
+                        var xml = mxUtils.getXml(root);
+                            
+                        if (bg != null)
+                        {
+                            bg = '&bg=' + bg;
+                        }
+                        
+                        new mxXmlRequest('/Export', 'filename=export.' + format + '&format=' + format +
+                            bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).
+                            simulate(document, '_blank');
+                    }
+                    
+                    // Exporting to bitmap using ExportServlet
+                    document.body.appendChild(mxUtils.button('Export PNG', function()
+                    {
+                        exportFile('png');
+				}));
+				
+                /************************************************************/
 }
             },
         // settings

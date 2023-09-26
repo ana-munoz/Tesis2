@@ -150,7 +150,7 @@ function customShapes(utils, cylinder, cellRenderer){
             n1.moveTo(5,20);
             n1.lineTo(70,20);
             
-        }
+        /* }
         //foreground
         else {
         n1.moveTo(37,0);
@@ -161,7 +161,7 @@ function customShapes(utils, cylinder, cellRenderer){
         n1.moveTo(37,74);
         n1.lineTo(37,200);
         n1.moveTo(200,200);
-        n1.lineTo(37,200);
+        n1.lineTo(37,200); */
         
 
         n1.close();
@@ -221,7 +221,7 @@ RoleShape.prototype.redrawPath = function(c, x, y, w, h, isForeground){
         
         c.moveTo(72,50);
         c.arcTo(72,50, 0,0,1,3,50);
-        } else {
+        } /* else {
             c.moveTo(37,0);
             c.lineTo(37,-100);
             c.lineTo(200,-100);
@@ -231,7 +231,7 @@ RoleShape.prototype.redrawPath = function(c, x, y, w, h, isForeground){
             c.lineTo(37,200);
             c.moveTo(200,200);
             c.lineTo(37,200);
-        }
+        } */
         //c.moveTo(32,14);
         //c.arcTo(30,13, 0,0,1,-32,14);
       

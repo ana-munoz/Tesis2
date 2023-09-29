@@ -91,6 +91,7 @@ window.CustomInfluenceObject = function (name, type) {
             this.name = name || 'New Influence';
             this.type = type || '<<Influence>>';
             this.customShape = 'influenceShape';
+            this.removeSelection = removeSelection || 0;
             this.clone = function () {
                 return mxUtils.clone(this);
             };
@@ -100,6 +101,7 @@ window.CustomRefinObject = function (name, type) {
     this.name = name || 'New Refinamiento';
     this.type = type || '<<Refinamiento>>';
     this.customShape = 'refinShape';
+    this.removeSelection = removeSelection || 0;
     this.clone = function () {
         return mxUtils.clone(this);
     };

@@ -635,34 +635,22 @@
                     {
                         //let m = evt.getCell();
                         console.log('flecha', evt.getProperty('cell'));
-                        /* console.log('origen', evt.getProperty('cell').source.getValue('type'));
-                        console.log('destino', evt.getProperty('cell').target.getValue('type')); */
+                        console.log('origen', evt.getProperty('cell').source.getValue('type'));
+                        console.log('destino', evt.getProperty('cell').target.getValue('type'));
                         editor.graph.stopEditing(true);
                         sourceCell = null;
                         var edge = evt.getProperty('cell');
                         let edgevalue = new window.CustomInfluenceObject();
                         edge.value=edgevalue;
-                        
-                        //DESDE ACTOR A AGENTE
-                        if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor")) 
+
+                         //DESDE ACTOR A AGENTE
+                         if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor")) 
                         && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Agent")))
                         {
                             edgevalue.removeSelection = 0;
                             edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
                         }
-                        // REMOVER DESDE ACTOR A CUALQUIER OTRA COSA
-                        if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor"))
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Goal"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Role")))
-                        {
-                            edgevalue.removeSelection = 1;
-                            editor.graph.getModel().remove(edge);
-                        }
-
-                        //DESDE GOL A ESTRATEGIA, O ESTRATEGIA A TACTICA, O TACTICA A OBJETIVO
+                        //DESDE GOAL A ESTRATEGIA, ESTRATEGIA A TACTICA, TACTICA A OBJETIVO
                         if (((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Goal"))
                         &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy"))))
                         ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Strategy")))
@@ -670,24 +658,31 @@
                         ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Tactic")))
                         &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective")))))
                         {
-                            var edgeRefin = evt.getProperty('cell');
-                            let edgeRefinValue = new window.CustomRefinObject();
-                            edgeRefin.value = edgeRefinValue;
-                            edgeRefin.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;dashed=1';
+                            var edgeRef = evt.getProperty('cell');
+                            let edgeRefValue = new window.CustomRefinObject();
+                            edgeRef.value=edgeRefValue;
+                            //edgevalue.removeSelection = 0;
+                            edgeRef.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;dashed=1';
                         }
                         
-                        if ( (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Objective")) 
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic")))
+                       
+
+                        // REMOVER DESDE ACTOR A CUALQUIER OTRA COSA
+                        /* if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor"))
+                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Goal"))
+                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy"))
+                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic"))
+                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective"))
+                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Role")))
                         {
-                            /* edgevalue.removeSelection = 1;
-                            editor.graph.getModel().remove(edge); */
-                            var edgeRefin = evt.getProperty('cell');
-                            let edgeRefinValue = new window.CustomRefinObject();
-                            edgeRefin.value = edgeRefinValue;
-                            edgeRefin.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#ff5733;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
-                        }
+                            edgevalue.removeSelection = 1;
+                            graph.getModel().remove(edge);
+                        } */
+
+                        
 
                     });
+                    
                     // CHANGE CELLS VALUES IN A EDITOR
                     
                     editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => { 

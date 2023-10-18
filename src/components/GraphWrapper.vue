@@ -53,7 +53,7 @@
     import morphLayout from "../helpers/childAutoLayout";
     import customShapes from "../helpers/customShapes";
     import zoom from "../helpers/zoom";
-    import exportGraphAsImage from "../helpers/exportGraphAsImage"
+    import exportGraphAsImage from "../helpers/exportGraphAsImage";
     //import loadModels from "../models/models";
 
 
@@ -73,8 +73,10 @@
         mxClient, mxUtils, mxEvent, mxEditor, mxRectangle, mxActor, mxGraph, mxGeometry, mxCell,
         mxImage, mxDivResizer, mxObjectCodec, mxCodecRegistry, mxConnectionHandler,
          mxClipboard, mxRubberband, mxGraphModel,  mxCodec, mxConstants,mxUndoManager, mxMorphing, 
-         mxFastOrganicLayout, mxDragSource, mxCellTracker, mxGraphView, mxCircleLayout
-         , mxLayoutManager, mxEllipse, mxHierarchicalLayout,  mxCylinder, mxCellRenderer
+         mxFastOrganicLayout, mxDragSource, mxCellTracker, mxGraphView, mxCircleLayout, 
+         mxLayoutManager, mxEllipse, mxHierarchicalLayout,  mxCylinder, mxCellRenderer, mxImageExport,
+         mxSvgCanvas2D, mxXmlRequest, mxXmlCanvas2D, mxPrintPreview
+
     } = mxgraph(graphConfig);
 
 // Golbal Access for mxGraph objetcs
@@ -109,7 +111,11 @@
     window.mxHierarchicalLayout = mxHierarchicalLayout;
     window.mxCylinder = mxCylinder;
     window.mxCellRenderer = mxCellRenderer;
-
+    window.mxImageExport = mxImageExport;
+    window.mxSvgCanvas2D = mxSvgCanvas2D;
+    window.mxXmlRequest = mxXmlRequest;
+    window.mxXmlCanvas2D = mxXmlCanvas2D;
+    window.mxPrintPreview = mxPrintPreview;
       
     //Main Editor
     var editor;
@@ -134,7 +140,7 @@
 // Prototype values for new objects
 // CustomActorObject (Vertex)
     window.CustomActorObject = function (name, type) {
-            this.name = name || 'New Actor';
+            this.name = name || 'Actor';
             this.type = type || '<<Actor>>';
             this.customShape = 'actorShape';
             this.width = '75';
@@ -145,7 +151,7 @@
         };
 // CustomAgentObject (Vertex)
     window.CustomAgentObject = function (name, type) {
-            this.name = name || 'New Agent';
+            this.name = name || 'Unidad Organizacional';
             this.type = type || '<<Agent>>';
             this.customShape = 'agentShape';
             this.width = '75';
@@ -156,7 +162,7 @@
         };
     // CustomRoleObject (Vertex)
     window.CustomRoleObject = function (name, type) {
-            this.name = name || 'New Role';
+            this.name = name || 'Rol';
             this.type = type || '<<Role>>';
             this.customShape = 'roleShape';
             this.width = '75';
@@ -168,7 +174,7 @@
     
     //CustomGoalObject (Vertex)
     window.CustomGoalObject = function (name, type) {
-                this.name = name || 'New Goal';
+                this.name = name || 'Meta';
                 this.type = type || '<<Goal>>';
                 this.customShape = 'goalShape';
                 this.width = '120';
@@ -180,7 +186,7 @@
 
     //CustomStrategyObject (Vertex)
     window.CustomStrategyObject = function (name, type) {
-                this.name = name || 'New Strategy';
+                this.name = name || 'Estrategia';
                 this.type = type || '<<Strategy>>';
                 this.customShape = 'strategyShape';
                 this.width = '120';
@@ -191,7 +197,7 @@
             };
     //CustomTacticObject (Vertex)
     window.CustomTacticObject = function (name, type) {
-                this.name = name || 'New Tactic';
+                this.name = name || 'Tactica';
                 this.type = type || '<<Tactic>>';
                 this.customShape = 'tacticShape';
                 this.width = '120';
@@ -202,7 +208,7 @@
             };
 
     window.CustomObjObject = function (name, type) {
-                this.name = name || 'New Objective';
+                this.name = name || 'Objetivo';
                 this.type = type || '<<Objective>>';
                 this.customShape = 'objShape';
                 this.width = '120';
@@ -214,8 +220,8 @@
             
     //CustomInfluenceObject (edge)
     window.CustomInfluenceObject = function (name, type, removeSelection) {
-                this.name = name || 'New Influence';
-                this.type = type || '<<Influence>>';
+                this.name = name || 'Nueva Influencia';
+                this.type = type || '<<Influencia>>';
                 this.customShape = 'influenceShape';
                 this.removeSelection = removeSelection || 0;
                 this.clone = function () {
@@ -225,7 +231,7 @@
     //CustomRefinObject (edge)
 
     window.CustomRefinObject = function (name, type, removeSelection) {
-        this.name = name || 'New Refinamiento';
+        this.name = name || 'Nuevo Refinamiento';
         this.type = type || '<<Refinamiento>>';
         this.customShape = 'refinShape';
         this.removeSelection = removeSelection || 0;
@@ -499,7 +505,7 @@
                 strategyWrapper.style.alignItems = 'center';
                 strategyWrapper.style.justifyContent = 'center';
                 //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                strategyWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.png></div>';
+                strategyWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/strategy.png></div>';
                 sidebaricons.appendChild(strategyWrapper);
 
                 let tacticWrapper = document.createElement('div');
@@ -513,7 +519,7 @@
                 tacticWrapper.style.alignItems = 'center';
                 tacticWrapper.style.justifyContent = 'center';
                 //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                tacticWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.gif></div>';
+                tacticWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.png></div>';
                 sidebaricons.appendChild(tacticWrapper);
 
                 let objWrapper = document.createElement('div');
@@ -644,19 +650,19 @@
                         edge.value=edgevalue;
 
                          //DESDE ACTOR A AGENTE
-                         if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor")) 
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Agent")))
+                         if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor")) 
+                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional")))
                         {
                             edgevalue.removeSelection = 0;
                             edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
                         }
                         //DESDE GOAL A ESTRATEGIA, ESTRATEGIA A TACTICA, TACTICA A OBJETIVO
-                        if (((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Goal"))
-                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy"))))
-                        ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Strategy")))
-                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic"))))
-                        ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Tactic")))
-                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective")))))
+                        if (((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Meta"))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Estrategia"))))
+                        ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Estrategia")))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Tactica"))))
+                        ||(((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Tactica")))
+                        &&((Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Objetivo")))))
                         {
                             var edgeRef = evt.getProperty('cell');
                             let edgeRefValue = new window.CustomRefinObject();
@@ -668,16 +674,17 @@
                        
 
                         // REMOVER DESDE ACTOR A CUALQUIER OTRA COSA
-                        /* if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor"))
+                        if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("New Actor"))
                         && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Goal"))
                         || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Strategy"))
                         || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Tactic"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objective"))
+                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Objetivo"))
                         || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("New Role")))
                         {
-                            edgevalue.removeSelection = 1;
-                            graph.getModel().remove(edge);
-                        } */
+                            //Sedgevalue.removeSelection = 1;
+                            //editor.graph.getModel().remove(edge);
+                            //edge.style('null');
+                        }
 
                         
 
@@ -754,118 +761,8 @@
                     //Init Zoom:
                     zoom(editor.graph);
                     
-                    //exportGraphAsImage(graph);
-
-                    /* EXPORT AS IMAGE */
-                    /***********************************/
-                    /* document.body.appendChild(mxUtils.button('Export SVG', function()
-				    {
-                        var background = '#ffffff';
-                        var scale = 1;
-                        var border = 1;
-                        
-                        var imgExport = new mxImageExport();
-                        var bounds = graph.getGraphBounds();
-                        var vs = graph.view.scale;
-
-                        // Prepares SVG document that holds the output
-                        var svgDoc = mxUtils.createXmlDocument();
-                        var root = (svgDoc.createElementNS != null) ?
-                                svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
-                        
-                        if (background != null)
-                        {
-                            if (root.style != null)
-                            {
-                                root.style.backgroundColor = background;
-                            }
-                            else
-                            {
-                                root.setAttribute('style', 'background-color:' + background);
-                            }
-                        }
-                        
-                        if (svgDoc.createElementNS == null)
-                        {
-                            root.setAttribute('xmlns', mxConstants.NS_SVG);
-                            root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
-                        }
-                        else
-                        {
-                            // KNOWN: Ignored in IE9-11, adds namespace for each image element instead. No workaround.
-                            root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
-                        }
-                        
-                        root.setAttribute('width', (Math.ceil(bounds.width * scale / vs) + 2 * border) + 'px');
-                        root.setAttribute('height', (Math.ceil(bounds.height * scale / vs) + 2 * border) + 'px');
-                        root.setAttribute('version', '1.1');
-                        
-                        // Adds group for anti-aliasing via transform
-                        var group = (svgDoc.createElementNS != null) ?
-                                svgDoc.createElementNS(mxConstants.NS_SVG, 'g') : svgDoc.createElement('g');
-                        group.setAttribute('transform', 'translate(0.5,0.5)');
-                        root.appendChild(group);
-                        svgDoc.appendChild(root);
-
-                        // Renders graph. Offset will be multiplied with state's scale when painting state.
-                        var svgCanvas = new mxSvgCanvas2D(group);
-                        svgCanvas.translate(Math.floor((border / scale - bounds.x) / vs), Math.floor((border / scale - bounds.y) / vs));
-                        svgCanvas.scale(scale / vs);
-
-                        // Displayed if a viewer does not support foreignObjects (which is needed to HTML output)
-                        svgCanvas.foAltText = '[Not supported by viewer]';
-                        imgExport.drawState(graph.getView().getState(graph.model.root), svgCanvas);
-
-                        var xml = encodeURIComponent(mxUtils.getXml(root));
-                        new mxXmlRequest('/Echo', 'filename=export.svg&format=svg' + '&xml=' + xml).simulate(document, '_blank');
-				    }));
-				
-                    function exportFile(format)
-                    {
-                        var bg = '#ffffff';
-                        var scale = 1;
-                        var b = 1;
-                        
-                        var imgExport = new mxImageExport();
-                        var bounds = graph.getGraphBounds();
-                        var vs = graph.view.scale;
-                        
-                        // New image export
-                        var xmlDoc = mxUtils.createXmlDocument();
-                        var root = xmlDoc.createElement('output');
-                        xmlDoc.appendChild(root);
-                        
-                        // Renders graph. Offset will be multiplied with state's scale when painting state.
-                        var xmlCanvas = new mxXmlCanvas2D(root);
-                        xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
-                        xmlCanvas.scale(scale / vs);
-                        
-                        imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-
-                        // Puts request data together
-                        var w = Math.ceil(bounds.width * scale / vs + 2 * b);
-                        var h = Math.ceil(bounds.height * scale / vs + 2 * b);
-                        
-                        var xml = mxUtils.getXml(root);
-                            
-                        if (bg != null)
-                        {
-                            bg = '&bg=' + bg;
-                        }
-                        
-                        new mxXmlRequest('/Export', 'filename=export.' + format + '&format=' + format +
-                            bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).
-                            simulate(document, '_blank');
-                    }
-                    
-                    // Exporting to bitmap using ExportServlet
-                    document.body.appendChild(mxUtils.button('Export PNG', function()
-                    {
-                        exportFile('png');
-				})); */
-				
-                /************************************************************/
-}
+                    exportGraphAsImage(editor.graph);
+            }
             },
         // settings
             init() {

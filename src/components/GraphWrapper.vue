@@ -642,27 +642,39 @@
                     /** LISTENER FOR NEW EDGES */
                     editor.graph.connectionHandler.addListener(mxEvent.CONNECT, function(sender, evt)
                     {
+                        //console.log('flecha', evt.getProperty('cell'));
+                        //console.log('origen', evt.getProperty('cell').source.getValue('type'));
+                        //console.log('destino', evt.getProperty('cell').target.getValue('type'));
+                        //editor.graph.stopEditing(true);
                         //sourceCell = null;
-                        //targetCell = null;
-                        //let m = evt.getCell();
-                        console.log('flecha', evt.getProperty('cell'));
-                        console.log('origen', evt.getProperty('cell').source.getValue('type'));
-                        console.log('destino', evt.getProperty('cell').target.getValue('type'));
-                        editor.graph.stopEditing(true);
-                        sourceCell = null;
-                        //targetCell = null;
                         var edge = evt.getProperty('cell');
                         let edgevalue = new window.CustomInfluenceObject();
                         edge.value=edgevalue;
 
-                         //DESDE ACTOR A AGENTE
+                         //DESDE ACTOR A UNIDAD ORGANIZACIONAL
                         if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor")) 
                         && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional")))
                         {
                             edgevalue.removeSelection = 0;
                             edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
+                            console.log("conectando actor a org");
+                        } //IMPEDIR CONEXIONES DESDE ACTOR A CUALQUIER COSA
+                        else if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor")) 
+                        && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional"))) {
+                            console.log("conexion no validaaaa")
+                            edgevalue.removeSelection = 1;
+                            //edge.style='null';
+                            editor.graph.getModel().remove(edge);
                         }
-
+                        
+                        //IMPEDIR CONEXIONES DESDE ORGANIZACION O ROL HACIA CUALQUIER COSA
+                        if((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Unidad Organizacional"))
+                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Rol")))
+                        {
+                            edgevalue.removeSelection = 1;
+                            editor.graph.getModel().remove(edge);
+                            console.log("conexion desde org no valida");
+                        }
 
 
                         //DESDE GOAL A ESTRATEGIA, ESTRATEGIA A TACTICA, TACTICA A OBJETIVO
@@ -677,37 +689,26 @@
                             let edgeRefValue = new window.CustomRefinObject();
                             edgeRef.value=edgeRefValue;
                             edgeRef.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;dashed=1';
+                            console.log("conexion valida");
                         }
                         
                         //REMOVER DESDE OBJETIVO A TACTICA, TACTICA A ESTRATEGIA, ESTRATEGIA A META
-                        /* if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Objetivo"))
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Tactica"))
-                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Tactica"))
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Estrategia"))
-                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Estrategia"))
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Meta"))
+                        else if( ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Meta"))
+                        && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Estrategia")))
+                        || ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Estrategia"))
+                        && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Tactica")))
+                        || ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Tactica"))
+                        && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Objetivo")))
+                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Objetivo"))
                         )
                         {
+                            var edgeRef = evt.getProperty('cell');
+                            let edgeRefValue = new window.CustomRefinObject();
+                            edgeRef.value=edgeRefValue;
+                            console.log("no se puede conectar un objetivo a tactica")
                             edgeRefValue.removeSelection = 1;
-                            //edge.style='null';
                             editor.graph.getModel().remove(edgeRef);
-                        } */
-                        
-
-                        // REMOVER DESDE ACTOR A CUALQUIER OTRA COSA
-                        if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor"))
-                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Meta"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Estrategia"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Tactica"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Objetivo"))
-                        || (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Rol")))
-                        {
-                            edgevalue.removeSelection = 1;
-                            //edge.style='null';
-                            editor.graph.getModel().remove(edge);
                         }
-                        
-                        
 
                     });
                     

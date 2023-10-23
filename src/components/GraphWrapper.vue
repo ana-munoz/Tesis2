@@ -304,16 +304,16 @@
                             var targetCell = me.getCell() ;
                             
                             //Dropping sourceCell on targetCell
-                            if(sourceCell != null && targetCell != null && sourceCell.isEdge() == false ){
+                            /* if(sourceCell != null && targetCell != null && sourceCell.isEdge() == false ){
                                 if(targetCell != sourceCell && targetCell != sourceCell.getParent()){
                                     if(targetCell.isVertex()){ 
-                                        let model = graph.getModel();                                        
+                                        let model = graph.getModel();
+                                                                             
                                         model.beginUpdate();
                                         //AQUÍ SE ARMA EL CONTAINER QUE PIERDE EL MONO Y HACE EL ANIDADO
                                         try{
                                             if(targetCell.getChildCount()<2){
                                                 targetCell.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=0;opacity=50;verticalAlign=top;align=left;';
-                                                
                                             }
                                         
                                             graph.addCell(sourceCell,targetCell);
@@ -326,6 +326,7 @@
                                         }
                                         finally{
                                             model.endUpdate();
+                                            
                                         }
                                     
                                         graph.setSelectionCell(sourceCell);
@@ -333,7 +334,9 @@
                                         targetCell = null;
                                     }
                                 }
-                            }               
+                                
+                            }  */   
+                                      
                         }
                    }                
                 );

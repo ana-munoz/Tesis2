@@ -10,7 +10,7 @@
         <div id="sidebar">
             <div id="panelTitle"
                 style="height: 30px;font-family: Arial, Helvetica, sans-serif; color: #ffffff;vertical-align:baseline;">
-                <p>Lite*</p>
+                <p>LiteStrat</p>
             </div>
             <div id="icons">
             </div>
@@ -344,6 +344,7 @@
     
 
                 /** CALLBACK FOR NEW VERTEX*/
+                /* AQUÍ DEBIERA AGREGAR LA CONDICIÓN DE ANIDACIÓN */
                 let dragCallBackFunct = function (graph, evt, obj) {
                     
                     //prepares graph for editing
@@ -363,7 +364,7 @@
                     //Model update
                     model.beginUpdate();
                     
-                    let v1 = model.cloneCell(prototype);
+                    let v1 = model.cloneCell(prototype); // V1 Contiene la figura "hija", es decir, la que será anidada.
                     
                     try {
                         //Set properties for new cell
@@ -376,15 +377,29 @@
                         //v1.geometry.alternateBounds = new mxRectangle(0, 0, 300, 300);
                        
                        //Set child to parent and parent's styles
+                      
                        if(newParent!=null && newParent.isVertex()){
+                            if(newParent.value.customShape == "agentShape" && !(v1.value.customShape == "objShape") ){
+                                //console.log("new parent: ", newParent.value.customShape);
+                                //console.log("v1", v1);  
                                 newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;spacingLeft=40;spacingTop=10;';
                                 v1.geometry.relative=false;
                                 v1.geometry.x = 200;// parseInt(pt.x);
                                 v1.geometry.y = 200;//parseInt(pt.y);
                                 //newParent.geometry.width = 200;
                                 //newParent.geometry.height = 200;
-                        }
-                        else{
+                            } else if (newParent.value.customShape == "roleShape" && v1.value.customShape == "objShape") {
+                                console.log("new parent: ", newParent.value.customShape);
+                                console.log("v1", v1.value.customShape);  
+                                newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;spacingLeft=40;spacingTop=10;';
+                                v1.geometry.relative=false;
+                                v1.geometry.x = 200;// parseInt(pt.x);
+                                v1.geometry.y = 200;//parseInt(pt.y);
+                                
+                            } else {
+                            newParent = graph.getDefaultParent();  //este else impide que si arrastro un constructo != objeto, no lo anide; si suelto un constructo en el canvas y luego lo arrastro dentro del rol, se anida. Esto ultimo no debiera pasar.                          
+                            }
+                        } else {
                             newParent = graph.getDefaultParent();                            
                         }
                         graph.addCell(v1, newParent);
@@ -665,6 +680,7 @@
                             edgevalue.removeSelection = 1;
                             //edge.style='null';
                             editor.graph.getModel().remove(edge);
+                            //permitir UO A ACTOR
                         }
                         
                         //IMPEDIR CONEXIONES DESDE ORGANIZACION O ROL HACIA CUALQUIER COSA

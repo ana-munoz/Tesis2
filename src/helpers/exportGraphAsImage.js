@@ -1,5 +1,149 @@
 import axios from "axios";
 import swal from "sweetalert";
+
+function exportModelJson(graph){
+	graph.selectAll();
+	var selection = graph.getSelectionCells();
+	var model = 
+	{
+		"actores": [],
+		"unidades": [],
+		"roles": [],
+		"metas": [],
+		"estrategias": [],
+		"tacticas": [],
+		"objetivos": [],
+		"influencias": [],
+		"refinamientos": []
+	};
+	
+	//var currentId = document.getElementsByClassName("modelIdentifier")[0].textContent;
+	
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Actor"){
+            var actor = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.actores.push(actor);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "UnidadOrganizacional"){
+            var unidadOrganizacional = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.unidades.push(unidadOrganizacional);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Rol"){
+            var rol = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.roles.push(rol);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Meta"){
+            var meta = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.metas.push(meta);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Estrategia"){
+            var estrategia = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.estrategias.push(estrategia);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Tactica"){
+            var tactica = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.tacticas.push(tactica);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Objetivo"){
+            var objetivo = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.objetivos.push(objetivo);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Influencia"){
+            var influencia = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.influencias.push(influencia);
+        }
+    }
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Refinamiento"){
+            var refinamiento = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.refinamientos.push(refinamiento);
+        }
+    }
+	console.log("Modelo JSON...", model);
+
+    var modelString = JSON.stringify(model, null, 4);    
+    return modelString;
+	
+
+}
+
 function exportGraphAsImage(graph){
 
 
@@ -72,9 +216,48 @@ function exportGraphAsImage(graph){
 
 	let exportJSONbtn = document.body.appendChild(mxUtils.button('Exportar JSON', function() {
 		console.log("exportando JSON...");
+		var modelString = exportModelJson(graph);
+
+        function copyClipboard(text) {
+            var x = document.createElement("textarea");
+            document.body.appendChild(x);
+            x.value = text;
+            x.select();
+            document.execCommand("copy");
+            document.body.removeChild(x);
+        }
+
+        swal({
+            title: "Export Model",
+            text: modelString,
+            className: 'view-model',
+            buttons: {
+                copyclipboard: {
+                    text: "Copy Clipboard"
+                },
+                close: {
+                    text: "Close"
+                },
+            },
+        })
+        .then((value) => {
+            switch (value) {
+                case "copyclipboard":
+                    swal("Copied", "The model has been copied to the clipboard", "success",{
+                        className: 'view-model-normal',
+                    });
+                    copyClipboard(modelString);
+                    break;
+                case "close":
+                    break;
+            }
+        });
+
+        window.scrollTo(0, 0);
+    
 	}));
 	exportJSONbtn.style.position = 'absolute';
-	exportJSONbtn.style.top = '80px';
+	exportJSONbtn.style.top = '200px';
 	exportJSONbtn.style.right = '4px';
 	exportJSONbtn.style.width = '73px';
 	exportJSONbtn.setAttribute("class", "button");
@@ -172,37 +355,6 @@ function exportGraphAsImage(graph){
 	exportPngBtn.setAttribute("class", "button");
 	
 
-} export default exportGraphAsImage;
+} 
 
-/* function exportGraphAsImage(graph) {{
-	  var imgExport = new mxImageExport();
-      var graphView = graph.getView();
-      var bounds = graphView.getGraphBounds();
-      var scale = graphView.getScale();
-
-      var canvas = imgExport.createCanvas(bounds.width * scale, bounds.height * scale);
-      var ctx = canvas.getContext('2d');
-
-      ctx.scale(scale, scale);
-      ctx.translate(-bounds.x, -bounds.y);
-
-      imgExport.drawState(graph.getView().getState(graph.model.root), canvas);
-
-      // Convert canvas to a data URL
-      var imageDataURL = canvas.toDataURL('image/png');
-
-      // You can now save or display the imageDataURL as needed
-      console.log(imageDataURL);
-
-      // Optionally, you can create a link to download the image
-      var link = document.createElement('a');
-      link.href = imageDataURL;
-      link.download = 'graph.png';
-      link.click();
-    }
-
-    // Add a click event listener to the export button
-    var exportButton = document.getElementById('exportButton');
-    exportButton.addEventListener('click', exportGraphAsImage);
-		  }
-		  export default exportGraphAsImage; */
+export default exportGraphAsImage;

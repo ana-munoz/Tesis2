@@ -130,109 +130,128 @@
 
     //load Models
     // CustomUserObject
-    window.CustomUserObject = function (name, type) {
-    this.name = name || 'New Name';
-    this.type = type || '<<New Type>>';
-    this.clone = function () {
-        return mxUtils.clone(this);
+    window.CustomUserObject = function (identifier, name, type) {
+        this.identifier = identifier || 'Identifier';
+        this.name = name || 'New Name';
+        this.type = type || '<<New Type>>';
+        this.clone = function () {
+            return mxUtils.clone(this);
     };
 };
 // Prototype values for new objects
 // CustomActorObject (Vertex)
-    window.CustomActorObject = function (name, type) {
-            this.name = name || 'Actor';
-            this.type = type || '<<Actor>>';
-            this.customShape = 'actorShape';
-            this.width = '75';
-            this.height = '75';
-            this.clone = function () {
-                return mxUtils.clone(this);
-            };
+    window.CustomActorObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Actor';
+        this.identifier = identifier || 'Actor';    
+        this.name = name || 'Actor';
+        this.type = type || 'Actor';
+        this.customShape = 'actorShape';
+        this.width = '75';
+        this.height = '75';
+        this.clone = function () {
+            return mxUtils.clone(this);
         };
-// CustomAgentObject (Vertex)
-    window.CustomAgentObject = function (name, type) {
-            this.name = name || 'Unidad Organizacional';
-            this.type = type || '<<Agent>>';
-            this.customShape = 'agentShape';
-            this.width = '75';
-            this.height = '75';
-            this.clone = function () {
-                return mxUtils.clone(this);
-            };
+    };
+// Custom Unidad Organizacional (Vertex)
+    window.CustomAgentObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Unidad Organizacional';
+        this.identifier = identifier || 'UnidadOrganizacional';
+        this.name = name || 'Unidad Organizacional';
+        this.type = type || 'UnidadOrganizacional';
+        this.customShape = 'agentShape';
+        this.width = '75';
+        this.height = '75';
+        this.clone = function () {
+            return mxUtils.clone(this);
         };
+    };
     // CustomRoleObject (Vertex)
-    window.CustomRoleObject = function (name, type) {
-            this.name = name || 'Rol';
-            this.type = type || '<<Role>>';
-            this.customShape = 'roleShape';
-            this.width = '75';
-            this.height = '75';
-            this.clone = function () {
-                return mxUtils.clone(this);
-            };
+    window.CustomRoleObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Rol';
+        this.identifier = identifier || 'Rol';
+        this.name = name || 'Rol';
+        this.type = type || 'Rol';
+        this.customShape = 'roleShape';
+        this.width = '75';
+        this.height = '75';
+        this.clone = function () {
+            return mxUtils.clone(this);
         };
+    };
     
     //CustomGoalObject (Vertex)
-    window.CustomGoalObject = function (name, type) {
-                this.name = name || 'Meta';
-                this.type = type || '<<Goal>>';
-                this.customShape = 'goalShape';
-                this.width = '120';
-                this.height = '40';
-                this.clone = function () {
-                    return mxUtils.clone(this);
-                };
-            };
+    window.CustomGoalObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Meta';
+        this.identifier = identifier || 'Meta';        
+        this.name = name || 'Meta';
+        this.type = type || 'Meta';
+        this.customShape = 'goalShape';
+        this.width = '120';
+        this.height = '40';
+        this.clone = function () {
+            return mxUtils.clone(this);
+        };
+    };
 
     //CustomStrategyObject (Vertex)
-    window.CustomStrategyObject = function (name, type) {
-                this.name = name || 'Estrategia';
-                this.type = type || '<<Strategy>>';
-                this.customShape = 'strategyShape';
-                this.width = '120';
-                this.height = '40';
-                this.clone = function () {
-                    return mxUtils.clone(this);
-                };
-            };
+    window.CustomStrategyObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Estrategia';
+        this.identifier = identifier || 'Estrategia';
+        this.name = name || 'Estrategia';
+        this.type = type || 'Estrategia';
+        this.customShape = 'strategyShape';
+        this.width = '120';
+        this.height = '40';
+        this.clone = function () {
+            return mxUtils.clone(this);
+        };
+    };
     //CustomTacticObject (Vertex)
-    window.CustomTacticObject = function (name, type) {
-                this.name = name || 'Tactica';
-                this.type = type || '<<Tactic>>';
-                this.customShape = 'tacticShape';
-                this.width = '120';
-                this.height = '40';
-                this.clone = function () {
-                    return mxUtils.clone(this);
-                };
-            };
+    window.CustomTacticObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Tactica';
+        this.identifier = identifier || 'Tactica';
+        this.name = name || 'Tactica';
+        this.type = type || 'Tactica';
+        this.customShape = 'tacticShape';
+        this.width = '120';
+        this.height = '40';
+        this.clone = function () {
+            return mxUtils.clone(this);
+        };
+    };
 
-    window.CustomObjObject = function (name, type) {
-                this.name = name || 'Objetivo';
-                this.type = type || '<<Objective>>';
-                this.customShape = 'objShape';
-                this.width = '120';
-                this.height = '40';
-                this.clone = function () {
-                    return mxUtils.clone(this);
-                }
+    window.CustomObjObject = function (definition, identifier, name, type) {
+        this.definition = definition || 'Objetivo';
+        this.identifier = identifier || 'Objetivo';
+        this.name = name || 'Objetivo';
+        this.type = type || 'Objetivo';
+        this.customShape = 'objShape';
+        this.width = '120';
+        this.height = '40';
+        this.clone = function () {
+            return mxUtils.clone(this);
+        }
     }
             
     //CustomInfluenceObject (edge)
-    window.CustomInfluenceObject = function (name, type, removeSelection) {
-                this.name = name || 'Nueva Influencia';
-                this.type = type || '<<Influencia>>';
-                this.customShape = 'influenceShape';
-                this.removeSelection = removeSelection || 0;
-                this.clone = function () {
-                    return mxUtils.clone(this);
-                };
-            };
+    window.CustomInfluenceObject = function (definition, identifier, name, type, removeSelection) {
+        this.definition = definition || 'Relacion';
+        this.identifier = identifier || 'Influencia';       
+        this.name = name || 'Nueva Influencia';
+        this.type = type || 'Influencia';
+        this.customShape = 'influenceShape';
+        this.removeSelection = removeSelection || 0;
+        this.clone = function () {
+            return mxUtils.clone(this);
+        };
+    };
     //CustomRefinObject (edge)
 
-    window.CustomRefinObject = function (name, type, removeSelection) {
+    window.CustomRefinObject = function (definition, identifier, name, type, removeSelection) {
+        this.definition = definition || 'Relacion';
+        this.identifier = identifier || 'Refinamiento';
         this.name = name || 'Nuevo Refinamiento';
-        this.type = type || '<<Refinamiento>>';
+        this.type = type || 'Refinamiento';
         this.customShape = 'refinShape';
         this.removeSelection = removeSelection || 0;
         this.clone = function () {

@@ -18,7 +18,7 @@ function exportModelJson(graph){
 	};
 	
 	//var currentId = document.getElementsByClassName("modelIdentifier")[0].textContent;
-	
+
 	for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Actor"){
             var actor = {
@@ -32,7 +32,7 @@ function exportModelJson(graph){
             model.actores.push(actor);
         }
     }
-	for (let index = 0; index < selection.length; index++) {
+	/*for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "UnidadOrganizacional"){
             var unidadOrganizacional = {
                 unique: selection[index].id,
@@ -42,9 +42,118 @@ function exportModelJson(graph){
                 x: selection[index].geometry.x,
                 y: selection[index].geometry.y
             }
+
+            //model.unidades.push(unidadOrganizacional);
+        }
+    }*/
+//repetido
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "UnidadOrganizacional"){
+            var unidad = selection[index];
+			var hijos = unidad.getChildCount();
+			var unidadOrganizacional = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+			}
+			//console.log("unidad", unidad.value.name);
+			console.log("hijos", hijos)
+			for (let hijo_nro = 0; hijo_nro < hijos; hijo_nro++) {
+				console.log("test,", unidad.getChildAt(hijo_nro).value.name); //if para pushear los consturctos anidados
+				
+				var item = unidad.getChildAt(hijo_nro).value;
+
+				if(unidad.getChildAt(hijo_nro).value.type == "Meta"){
+					var meta = {
+						unique: unidad.getChildAt(hijo_nro).id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+				} model.metas.push(meta);
+
+				if (unidad.getChildAt(hijo_nro).value.type == "Estrategia"){
+					var estrategia = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+				} model.estrategias.push(estrategia);
+				if (unidad.getChildAt(hijo_nro).value.type == "Tactica"){
+					var tactica = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+				} model.tacticas.push(tactica);
+			}
+			/* primero sacar roles, luego tirar al json todo lo que haya dentro */
+			
+			/* var unidadOrganizacional = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            } */
+			
             model.unidades.push(unidadOrganizacional);
         }
     }
+	//getChildCount (para iterar); getChildAt(saca con un indice)
+	/*
+	const detectedShapes = [];
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "UnidadOrganizacional"){
+            var unidadOrganizacional = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y,
+				shapesInside: []
+    		};
+
+    		// Iterate through other shapes to check if they are inside this UnidadOrganizacional
+			for (let otherIndex = 0; otherIndex < selection.length; otherIndex++) {
+				if (otherIndex !== index) {
+					const otherShape = selection[otherIndex];
+					
+					// Check if otherShape is inside unidadOrganizacional
+					if (isShapeInside(unidadOrganizacional, otherShape)) {
+					// Add the detected shape to the shapesInside array
+					unidadOrganizacional.shapesInside.push({
+						unique: otherShape.id,
+						identifier: otherShape.value.identifier,
+						name: otherShape.value.name,
+						type: otherShape.value.type,
+						x: otherShape.geometry.x,
+						y: otherShape.geometry.y
+						});
+					}
+				}
+			}
+	
+		// Add unidadOrganizacional to the model's unidades array
+		model.unidades.push(unidadOrganizacional);
+
+		// Add unidadOrganizacional's detected shapes to the detectedShapes array
+		detectedShapes.push(unidadOrganizacional.shapesInside);
+  		}
+	}*/
 	for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Rol"){
             var rol = {
@@ -110,7 +219,7 @@ function exportModelJson(graph){
             model.objetivos.push(objetivo);
         }
     }
-	for (let index = 0; index < selection.length; index++) {
+	/* for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Influencia"){
             var influencia = {
                 unique: selection[index].id,
@@ -122,7 +231,37 @@ function exportModelJson(graph){
             }
             model.influencias.push(influencia);
         }
-    }
+    } */
+	for (let index = 0; index < selection.length; index++){
+		if(selection[index].value.type == "Influencia"){
+			if(selection[index].geometry.points != null){
+				var geometryPoints = []
+				for (let a = 0; a < selection[index].geometry.points.length; a++) {
+					geometryPoints[a] = selection[index].geometry.points[a];
+				}
+				var influencia = {
+					unique: selection[index].id,
+					identifier: selection[index].value.identifier,
+					name: selection[index].value.name,
+					type: selection[index].value.type,
+					source: selection[index].source.id,
+                    target: selection[index].target.id,
+                    "points": geometryPoints
+				}
+				model.influencias.push(influencia);
+			} else {
+				var influencia = {
+					unique: selection[index].id,
+                    identifier: selection[index].value.identifier,
+                    name: selection[index].value.name,
+                    type: selection[index].value.type,
+                    source: selection[index].source.id,
+                    target: selection[index].target.id
+				}
+				model.influencias.push(influencia);
+			}
+		}
+	}
 	for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Refinamiento"){
             var refinamiento = {
@@ -136,6 +275,7 @@ function exportModelJson(graph){
             model.refinamientos.push(refinamiento);
         }
     }
+
 	console.log("Modelo JSON...", model);
 
     var modelString = JSON.stringify(model, null, 4);    

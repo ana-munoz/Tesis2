@@ -32,21 +32,7 @@ function exportModelJson(graph){
             model.actores.push(actor);
         }
     }
-	/*for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "UnidadOrganizacional"){
-            var unidadOrganizacional = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
 
-            //model.unidades.push(unidadOrganizacional);
-        }
-    }*/
-//repetido
 	for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "UnidadOrganizacional"){
             var unidad = selection[index];
@@ -59,7 +45,6 @@ function exportModelJson(graph){
                 x: selection[index].geometry.x,
                 y: selection[index].geometry.y
 			}
-			//console.log("unidad", unidad.value.name);
 			console.log("hijos", hijos)
 			for (let hijo_nro = 0; hijo_nro < hijos; hijo_nro++) {
 				console.log("test,", unidad.getChildAt(hijo_nro).value.name); //if para pushear los consturctos anidados
@@ -75,7 +60,8 @@ function exportModelJson(graph){
 						x: unidad.getChildAt(hijo_nro).geometry.x,
 						y: unidad.getChildAt(hijo_nro).geometry.y
 					}
-				} model.metas.push(meta);
+					model.metas.push(meta);
+				} 
 
 				if (unidad.getChildAt(hijo_nro).value.type == "Estrategia"){
 					var estrategia = {
@@ -85,8 +71,9 @@ function exportModelJson(graph){
 						type: item.type,
 						x: unidad.getChildAt(hijo_nro).geometry.x,
 						y: unidad.getChildAt(hijo_nro).geometry.y
-					}
-				} model.estrategias.push(estrategia);
+					} 
+					model.estrategias.push(estrategia);
+				} 
 				if (unidad.getChildAt(hijo_nro).value.type == "Tactica"){
 					var tactica = {
 						unique: item.id,
@@ -95,19 +82,39 @@ function exportModelJson(graph){
 						type: item.type,
 						x: unidad.getChildAt(hijo_nro).geometry.x,
 						y: unidad.getChildAt(hijo_nro).geometry.y
+					} 
+					model.tacticas.push(tactica);
+				}
+				if (unidad.getChildAt(hijo_nro).value.type == "Objetivo"){
+					var objetivo = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					} 
+					model.objetivos.push(objetivo);
+				}
+				if(unidad.getChildAt(hijo_nro).value.type == "Rol") {
+					var rol_padre = unidad;
+                	var hijos_rol = rol_padre.getChildCount();
+					var rol = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
 					}
-				} model.tacticas.push(tactica);
+					console.log("hijos rol", hijos_rol)
+					for (let hijo_rol_nro = 0; hijo_rol_nro < hijos_rol; hijo_rol_nro++) {
+						console.log("hijos padre,", rol_padre.getChildAt(hijo_rol_nro).value.name);
+						
+					}
+					model.roles.push(rol);
+				} 
 			}
-			/* primero sacar roles, luego tirar al json todo lo que haya dentro */
-			
-			/* var unidadOrganizacional = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            } */
 			
             model.unidades.push(unidadOrganizacional);
         }
@@ -154,7 +161,7 @@ function exportModelJson(graph){
 		detectedShapes.push(unidadOrganizacional.shapesInside);
   		}
 	}*/
-	for (let index = 0; index < selection.length; index++) {
+	/*for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Rol"){
             var rol = {
                 unique: selection[index].id,
@@ -166,7 +173,7 @@ function exportModelJson(graph){
             }
             model.roles.push(rol);
         }
-    }
+    }*/
 	for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Meta"){
             var meta = {

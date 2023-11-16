@@ -417,6 +417,7 @@
                                 
                             } else {
                             newParent = graph.getDefaultParent();  //este else impide que si arrastro un constructo != objeto, no lo anide; si suelto un constructo en el canvas y luego lo arrastro dentro del rol, se anida. Esto ultimo no debiera pasar.                          
+                            alert("Alerta: dentro de un Rol sólo se anidan objetivos.")
                             }
                         } else {
                             newParent = graph.getDefaultParent();                            
@@ -676,11 +677,6 @@
                     /** LISTENER FOR NEW EDGES */
                     editor.graph.connectionHandler.addListener(mxEvent.CONNECT, function(sender, evt)
                     {
-                        //console.log('flecha', evt.getProperty('cell'));
-                        //console.log('origen', evt.getProperty('cell').source.getValue('type'));
-                        //console.log('destino', evt.getProperty('cell').target.getValue('type'));
-                        //editor.graph.stopEditing(true);
-                        //sourceCell = null;
                         var edge = evt.getProperty('cell');
                         let edgevalue = new window.CustomInfluenceObject();
                         edge.value=edgevalue;

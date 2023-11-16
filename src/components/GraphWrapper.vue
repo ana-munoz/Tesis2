@@ -153,7 +153,7 @@
         };
     };
 // Custom Unidad Organizacional (Vertex)
-    window.CustomAgentObject = function (definition, identifier, name, type) {
+    window.CustomAgentObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Unidad Organizacional';
         this.identifier = identifier || 'UnidadOrganizacional';
         this.name = name || 'Unidad Organizacional';
@@ -161,12 +161,13 @@
         this.customShape = 'agentShape';
         this.width = '75';
         this.height = '75';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         };
     };
     // CustomRoleObject (Vertex)
-    window.CustomRoleObject = function (definition, identifier, name, type) {
+    window.CustomRoleObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Rol';
         this.identifier = identifier || 'Rol';
         this.name = name || 'Rol';
@@ -174,13 +175,14 @@
         this.customShape = 'roleShape';
         this.width = '75';
         this.height = '75';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         };
     };
     
     //CustomGoalObject (Vertex)
-    window.CustomGoalObject = function (definition, identifier, name, type) {
+    window.CustomGoalObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Meta';
         this.identifier = identifier || 'Meta';        
         this.name = name || 'Meta';
@@ -188,13 +190,14 @@
         this.customShape = 'goalShape';
         this.width = '120';
         this.height = '40';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         };
     };
 
     //CustomStrategyObject (Vertex)
-    window.CustomStrategyObject = function (definition, identifier, name, type) {
+    window.CustomStrategyObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Estrategia';
         this.identifier = identifier || 'Estrategia';
         this.name = name || 'Estrategia';
@@ -202,12 +205,13 @@
         this.customShape = 'strategyShape';
         this.width = '120';
         this.height = '40';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         };
     };
     //CustomTacticObject (Vertex)
-    window.CustomTacticObject = function (definition, identifier, name, type) {
+    window.CustomTacticObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Tactica';
         this.identifier = identifier || 'Tactica';
         this.name = name || 'Tactica';
@@ -215,12 +219,13 @@
         this.customShape = 'tacticShape';
         this.width = '120';
         this.height = '40';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         };
     };
 
-    window.CustomObjObject = function (definition, identifier, name, type) {
+    window.CustomObjObject = function (definition, identifier, name, type, parentShape) {
         this.definition = definition || 'Objetivo';
         this.identifier = identifier || 'Objetivo';
         this.name = name || 'Objetivo';
@@ -228,6 +233,7 @@
         this.customShape = 'objShape';
         this.width = '120';
         this.height = '40';
+        this.parentShape = parentShape || 'null';
         this.clone = function () {
             return mxUtils.clone(this);
         }
@@ -683,24 +689,28 @@
 
                          //DESDE ACTOR A UNIDAD ORGANIZACIONAL
                         if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor")) 
+                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional"))
+                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Unidad Organizacional"))
+                        && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Actor"))
+                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Unidad Organizacional"))
                         && (Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional")))
+
                         {
                             edgevalue.removeSelection = 0;
                             edge.style='curved=1;edgeStyle=segmentEdgeStyle;strokeWidth=3;strokeColor=#000000;labelBackgroundColor=#ffffff;labelBorderColor=#000000;fontColor=#000000;verticalLabelPosition=top;';
                             console.log("conectando actor a org");
                         } //IMPEDIR CONEXIONES DESDE ACTOR A CUALQUIER COSA
                         else if ((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Actor")) 
-                        && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional"))) {
-                            console.log("conexion no validaaaa")
+                                && !(Object.values(evt.getProperty('cell').target.getValue(Object)).includes("Unidad Organizacional"))) {
+                            
                             edgevalue.removeSelection = 1;
                             //edge.style='null';
                             editor.graph.getModel().remove(edge);
-                            //permitir UO A ACTOR
+                            
                         }
                         
                         //IMPEDIR CONEXIONES DESDE ORGANIZACION O ROL HACIA CUALQUIER COSA
-                        if((Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Unidad Organizacional"))
-                        || (Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Rol")))
+                        if(Object.values(evt.getProperty('cell').source.getValue(Object)).includes("Rol"))
                         {
                             edgevalue.removeSelection = 1;
                             editor.graph.getModel().remove(edge);

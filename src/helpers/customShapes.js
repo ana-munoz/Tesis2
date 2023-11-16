@@ -170,40 +170,7 @@ function customShapes(utils, cylinder, cellRenderer){
 
     cellRenderer.registerShape('agentShape', AgentShape);
 
-    //Nested agent shape
-    /* utils.extend(AgentShape, cylinder);
-    
-    NestedAgentShape.prototype.redrawPath = function(n1, x,y,w,h){
-        
-            if(!isForeground){
-
-                n1.moveTo(75,37);
-                n1.arcTo(37,37, 0,1,1,0,37);
-                n1.arcTo(-37,37, 0,1,1,75,37);
-                
-                n1.moveTo(5,20);
-                n1.lineTo(70,20);
-                
-            }
-            //foreground
-            else {
-            n1.moveTo(37,0);
-            n1.lineTo(37,-100);
-            n1.lineTo(200,-100);
-            
-            n1.lineTo(200,200);
-            n1.moveTo(37,74);
-            n1.lineTo(37,200);
-            n1.moveTo(200,200);
-            n1.lineTo(37,200);
-            
-
-            n1.close();
-            }
-        }
-    }
-    cellRenderer.registerShape('nestedAgentShape', NestedAgentShape); */
-
+   
 //Role Shape
 utils.extend(RoleShape, cylinder);
     
@@ -221,20 +188,7 @@ RoleShape.prototype.redrawPath = function(c, x, y, w, h, isForeground){
         
         c.moveTo(72,50);
         c.arcTo(72,50, 0,0,1,3,50);
-        } /* else {
-            c.moveTo(37,0);
-            c.lineTo(37,-100);
-            c.lineTo(200,-100);
-            
-            c.lineTo(200,200);
-            c.moveTo(37,74);
-            c.lineTo(37,200);
-            c.moveTo(200,200);
-            c.lineTo(37,200);
-        } */
-        //c.moveTo(32,14);
-        //c.arcTo(30,13, 0,0,1,-32,14);
-      
+        } 
     }
 };
 

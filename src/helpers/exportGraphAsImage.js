@@ -45,11 +45,51 @@ function exportModelJson(graph){
                 x: selection[index].geometry.x,
                 y: selection[index].geometry.y
 			}
-			console.log("hijos", hijos)
+			//console.log("hijos", hijos)
 			for (let hijo_nro = 0; hijo_nro < hijos; hijo_nro++) {
 				console.log("test,", unidad.getChildAt(hijo_nro).value.name); //if para pushear los consturctos anidados
 				
 				var item = unidad.getChildAt(hijo_nro).value;
+
+				if(unidad.getChildAt(hijo_nro).value.type == "Influencia"){
+					if(unidad.getChildAt(hijo_nro).geometry.points != null){
+						var geometryPoints = []
+						for (let a = 0; a < unidad.getChildAt(hijo_nro).geometry.points.length; a++) {
+							geometryPoints[a] = unidad.getChildAt(hijo_nro).geometry.points[a];
+						}
+						var influencia = {
+							unique: unidad.getChildAt(hijo_nro).id,
+							identifier: unidad.getChildAt(hijo_nro).value.identifier,
+							name: unidad.getChildAt(hijo_nro).value.name,
+							type: unidad.getChildAt(hijo_nro).value.type,
+							source: unidad.getChildAt(hijo_nro).source.id,
+							target: unidad.getChildAt(hijo_nro).target.id,
+							"points": geometryPoints
+						}
+						model.influencias.push(influencia);
+					} else {
+						var influencia = {
+							unique: unidad.getChildAt(hijo_nro).id,
+							identifier: unidad.getChildAt(hijo_nro).value.identifier,
+							name: unidad.getChildAt(hijo_nro).value.name,
+							type: unidad.getChildAt(hijo_nro).value.type,
+							source: unidad.getChildAt(hijo_nro).source.id,
+							target: unidad.getChildAt(hijo_nro).target.id,
+						}
+						model.influencias.push(influencia);
+					}
+				}
+				if(unidad.getChildAt(hijo_nro).value.type == "Refinamiento"){
+					var refinamiento = {
+						unique: unidad.getChildAt(hijo_nro).id,
+						identifier: unidad.getChildAt(hijo_nro).value.identifier,
+						name: unidad.getChildAt(hijo_nro).value.name,
+						type: unidad.getChildAt(hijo_nro).value.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+					model.refinamientos.push(refinamiento);
+				}
 
 				if(unidad.getChildAt(hijo_nro).value.type == "Meta"){
 					var meta = {
@@ -96,8 +136,9 @@ function exportModelJson(graph){
 					} 
 					model.objetivos.push(objetivo);
 				}
+				/* DESDE AQUÍ SE ITERA SOBRE LOS CONSTRUCTOS ANIDADOS DENTRO DE UNO O MÁS ROLES */
 				if(unidad.getChildAt(hijo_nro).value.type == "Rol") {
-					var rol_padre = unidad;
+					var rol_padre = unidad.getChildAt(hijo_nro);
                 	var hijos_rol = rol_padre.getChildCount();
 					var rol = {
 						unique: item.id,
@@ -109,8 +150,56 @@ function exportModelJson(graph){
 					}
 					console.log("hijos rol", hijos_rol)
 					for (let hijo_rol_nro = 0; hijo_rol_nro < hijos_rol; hijo_rol_nro++) {
+						
+						var itemRol = rol_padre.getChildAt(hijo_rol_nro).value;
+						
 						console.log("hijos padre,", rol_padre.getChildAt(hijo_rol_nro).value.name);
 						
+						if(rol_padre.getChildAt(hijo_rol_nro).value.type == "Meta"){
+							var meta = {
+								unique: rol_padre.getChildAt(hijo_rol_nro).id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							}
+							model.metas.push(meta);
+						} 
+		
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Estrategia"){
+							var estrategia = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.estrategias.push(estrategia);
+						} 
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Tactica"){
+							var tactica = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.tacticas.push(tactica);
+						}
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Objetivo"){
+							var objetivo = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.objetivos.push(objetivo);
+						}
 					}
 					model.roles.push(rol);
 				} 
@@ -120,125 +209,7 @@ function exportModelJson(graph){
         }
     }
 	//getChildCount (para iterar); getChildAt(saca con un indice)
-	/*
-	const detectedShapes = [];
-	for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "UnidadOrganizacional"){
-            var unidadOrganizacional = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y,
-				shapesInside: []
-    		};
 
-    		// Iterate through other shapes to check if they are inside this UnidadOrganizacional
-			for (let otherIndex = 0; otherIndex < selection.length; otherIndex++) {
-				if (otherIndex !== index) {
-					const otherShape = selection[otherIndex];
-					
-					// Check if otherShape is inside unidadOrganizacional
-					if (isShapeInside(unidadOrganizacional, otherShape)) {
-					// Add the detected shape to the shapesInside array
-					unidadOrganizacional.shapesInside.push({
-						unique: otherShape.id,
-						identifier: otherShape.value.identifier,
-						name: otherShape.value.name,
-						type: otherShape.value.type,
-						x: otherShape.geometry.x,
-						y: otherShape.geometry.y
-						});
-					}
-				}
-			}
-	
-		// Add unidadOrganizacional to the model's unidades array
-		model.unidades.push(unidadOrganizacional);
-
-		// Add unidadOrganizacional's detected shapes to the detectedShapes array
-		detectedShapes.push(unidadOrganizacional.shapesInside);
-  		}
-	}*/
-	/*for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Rol"){
-            var rol = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.roles.push(rol);
-        }
-    }*/
-	for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Meta"){
-            var meta = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.metas.push(meta);
-        }
-    }
-	for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Estrategia"){
-            var estrategia = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.estrategias.push(estrategia);
-        }
-    }
-	for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Tactica"){
-            var tactica = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.tacticas.push(tactica);
-        }
-    }
-	for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Objetivo"){
-            var objetivo = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.objetivos.push(objetivo);
-        }
-    }
-	/* for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Influencia"){
-            var influencia = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.influencias.push(influencia);
-        }
-    } */
 	for (let index = 0; index < selection.length; index++){
 		if(selection[index].value.type == "Influencia"){
 			if(selection[index].geometry.points != null){
@@ -269,7 +240,7 @@ function exportModelJson(graph){
 			}
 		}
 	}
-	for (let index = 0; index < selection.length; index++) {
+	/* for (let index = 0; index < selection.length; index++) {
         if(selection[index].value.type == "Refinamiento"){
             var refinamiento = {
                 unique: selection[index].id,
@@ -281,7 +252,7 @@ function exportModelJson(graph){
             }
             model.refinamientos.push(refinamiento);
         }
-    }
+    } */
 
 	console.log("Modelo JSON...", model);
 
@@ -409,11 +380,121 @@ function exportGraphAsImage(graph){
 	exportJSONbtn.style.width = '73px';
 	exportJSONbtn.setAttribute("class", "button");
 
-	let importJSONbtn = document.body.appendChild(mxUtils.button('Importar JSON', function() {
-		console.log("importando JSON...");
+	let importJSONbtn = document.body.appendChild(mxUtils.button('Importar JSON', function()
+    {        
+        var modelEntered;
+        var loadedIdentifier;
+
+        
+        swal("Importar", "Ingrese su modelo utilizando el método LiteStrat",{
+            content: "input",
+            className: 'view-model-normal',
+            buttons: ['Cancelar', 'Importar']
+        })
+       .then((value) => {
+            modelEntered = value;
+            //var modelEntered = prompt("Ingrese el modelo:", "");
+            if (modelEntered == null || modelEntered == "") {
+                //alert("Canceled");
+                if(modelEntered == null){
+                    /*
+                    swal("Canceled", "", "error", {
+                        dangerMode: true
+                    });
+                    */
+                }
+                if(modelEntered == ""){
+                    swal("Vacío", "", "error", {
+                        dangerMode: true
+                    });
+                }
+            } else {
+				if(modelEntered.includes('"actores":')&&
+					modelEntered.includes('"unidades":')&&
+					modelEntered.includes('"roles":')/*&&
+					modelEntered.includes('"metas":')&&
+					modelEntered.includes('"estartegias":')&&
+					modelEntered.includes('"tacticas":')&&
+					modelEntered.includes('"objetivos":') */
+					){
+
+                	graph.getModel().beginUpdate();
+
+					try
+					{
+
+						//load model from JSON
+						let model = JSON.parse(modelEntered);
+
+						var soloActores = [];
+
+						for (let index = 0; index < model.actores.length; index++) {
+							let actr = new window.CustomActorObject();
+							actr.identifier = model.actores[index].identifier;
+							actr.name = model.actores[index].name;
+							actr.type = model.actores[index].type;
+							let parent = graph.getDefaultParent();
+							soloActores[index] = graph.insertVertex(parent, 
+								model.actores[index].unique, 
+								actr, model.actores[index].x, 
+								model.actores[index].y, 
+								40, 50, 
+								'shape=actorShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
+						}
+
+						var soloUnidades = [];
+
+						for (let index = 0; index < model.unidades.length; index++) {
+							let unit = new window.CustomAgentObject();
+							unit.identifier = model.unidades[index].identifier;
+							unit.name = model.unidades[index].name;
+							unit.type = model.unidades[index].type;
+							let parent = graph.getDefaultParent();
+							soloUnidades[index] = graph.insertVertex(parent, 
+								model.unidades[index].unique, 
+								unit, model.unidades[index].x, 
+								model.unidades[index].y, 
+								40, 50, 
+								'shape=agentShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
+						}
+
+						var soloRoles = [];
+
+						for (let index = 0; index < model.unidades.length; index++) {
+							let role = new window.CustomRoleObject();
+							role.identifier = model.unidades[index].identifier;
+							role.name = model.unidades[index].name;
+							role.type = model.unidades[index].type;
+							let parent = graph.getDefaultParent();
+							soloRoles[index] = graph.insertVertex(parent, 
+								model.unidades[index].unique, 
+								role, model.unidades[index].x, 
+								model.unidades[index].y, 
+								40, 50, 
+								'shape=roleShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
+						}
+
+						//ESTO NO SE MUEVE DE AQUÍ
+						graph.refresh();
+					}
+					finally {
+						graph.getModel().endUpdate();
+					}
+
+                } else {
+                    //alert("Invalid model");
+                    swal("Modelo inválido", "", "Error", {
+                        dangerMode: true
+                    });
+				}
+			
+			}})
 	}));
+
+
+
 	importJSONbtn.style.position = 'absolute';
-	importJSONbtn.style.top = '80px';
+	importJSONbtn.style.top = '240px';
 	importJSONbtn.style.right = '4px';
 	importJSONbtn.style.width = '73px';
 	importJSONbtn.setAttribute("class", "button");

@@ -161,7 +161,7 @@
         this.customShape = 'agentShape';
         this.width = '75';
         this.height = '75';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -175,7 +175,7 @@
         this.customShape = 'roleShape';
         this.width = '75';
         this.height = '75';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -190,7 +190,7 @@
         this.customShape = 'goalShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -205,7 +205,7 @@
         this.customShape = 'strategyShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -219,7 +219,7 @@
         this.customShape = 'tacticShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -233,7 +233,7 @@
         this.customShape = 'objShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || 'null';
+        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         }
@@ -327,46 +327,9 @@
                     mouseUp: function(sender, me){   
                             //detects the target cell for drag&drop
                             var targetCell = me.getCell() ;
-                            
-                            //Dropping sourceCell on targetCell
-                            /* if(sourceCell != null && targetCell != null && sourceCell.isEdge() == false ){
-                                if(targetCell != sourceCell && targetCell != sourceCell.getParent()){
-                                    if(targetCell.isVertex()){ 
-                                        let model = graph.getModel();
-                                                                             
-                                        model.beginUpdate();
-                                        //AQUÍ SE ARMA EL CONTAINER QUE PIERDE EL MONO Y HACE EL ANIDADO
-                                        try{
-                                            if(targetCell.getChildCount()<2){
-                                                targetCell.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=0;opacity=50;verticalAlign=top;align=left;';
-                                            }
-                                        
-                                            graph.addCell(sourceCell,targetCell);
-                                            
-                                            sourceCell.geometry.x = 200;
-                                            sourceCell.geometry.y = 200;
-                                            
-                                            targetCell.geometry.width = 300;
-                                            targetCell.geometry.height = 300;
-                                        }
-                                        finally{
-                                            model.endUpdate();
-                                            
-                                        }
-                                    
-                                        graph.setSelectionCell(sourceCell);
-                                        sourceCell = null;
-                                        targetCell = null;
-                                    }
-                                }
-                                
-                            }  */   
                                       
                         }
-                   }                
-                );
-          
-    
+                });                
 
                 /** CALLBACK FOR NEW VERTEX*/
                 /* AQUÍ DEBIERA AGREGAR LA CONDICIÓN DE ANIDACIÓN */
@@ -413,8 +376,10 @@
                                 v1.geometry.y = 200;//parseInt(pt.y);
                                 //newParent.geometry.width = 200;
                                 //newParent.geometry.height = 200;
+                                
                             } else if (newParent.value.customShape == "roleShape" && v1.value.customShape == "objShape") {
                                 console.log("new parent: ", newParent.value.customShape);
+                                
                                 console.log("v1", v1.value.customShape);  
                                 newParent.style='shape=rectangle;fillColor=#ebf0f2;strokeColor=#33C9FA;resizable=1;opacity=50;verticalAlign=top;align=left;spacingLeft=40;spacingTop=10;';
                                 v1.geometry.relative=false;

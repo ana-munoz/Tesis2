@@ -42,6 +42,7 @@ function exportModelJson(graph){
                 identifier: selection[index].value.identifier,
                 name: selection[index].value.name,
                 type: selection[index].value.type,
+				parentShape: selection[index].value.parentCell,
                 x: selection[index].geometry.x,
                 y: selection[index].geometry.y
 			}
@@ -91,15 +92,18 @@ function exportModelJson(graph){
 					model.refinamientos.push(refinamiento);
 				}
 
-				if(unidad.getChildAt(hijo_nro).value.type == "Meta"){
+				if (unidad.getChildAt(hijo_nro).value.type == "Meta") {
+					var parentCell = unidad.getChildAt(hijo_nro).getParent();	//FLAG
 					var meta = {
 						unique: unidad.getChildAt(hijo_nro).id,
 						identifier: item.identifier,
 						name: item.name,
 						type: item.type,
+						//parentShapeIdentifier: parentCell ? parentCell.value.identifier : null,
 						x: unidad.getChildAt(hijo_nro).geometry.x,
 						y: unidad.getChildAt(hijo_nro).geometry.y
 					}
+					console.log("parent cell,", parentCell ? parentCell.value.name : null);
 					model.metas.push(meta);
 				} 
 
@@ -240,19 +244,7 @@ function exportModelJson(graph){
 			}
 		}
 	}
-	/* for (let index = 0; index < selection.length; index++) {
-        if(selection[index].value.type == "Refinamiento"){
-            var refinamiento = {
-                unique: selection[index].id,
-                identifier: selection[index].value.identifier,
-                name: selection[index].value.name,
-                type: selection[index].value.type,
-                x: selection[index].geometry.x,
-                y: selection[index].geometry.y
-            }
-            model.refinamientos.push(refinamiento);
-        }
-    } */
+
 
 	console.log("Modelo JSON...", model);
 
@@ -411,8 +403,8 @@ function exportGraphAsImage(graph){
             } else {
 				if(modelEntered.includes('"actores":')&&
 					modelEntered.includes('"unidades":')&&
-					modelEntered.includes('"roles":')/*&&
-					modelEntered.includes('"metas":')&&
+					modelEntered.includes('"roles":')&&
+					modelEntered.includes('"metas":')/*&&
 					modelEntered.includes('"estartegias":')&&
 					modelEntered.includes('"tacticas":')&&
 					modelEntered.includes('"objetivos":') */
@@ -460,19 +452,50 @@ function exportGraphAsImage(graph){
 
 						var soloRoles = [];
 
-						for (let index = 0; index < model.unidades.length; index++) {
+						for (let index = 0; index < model.roles.length; index++) {
 							let role = new window.CustomRoleObject();
-							role.identifier = model.unidades[index].identifier;
-							role.name = model.unidades[index].name;
-							role.type = model.unidades[index].type;
+							role.identifier = model.roles[index].identifier;
+							role.name = model.roles[index].name;
+							role.type = model.roles[index].type;
 							let parent = graph.getDefaultParent();
 							soloRoles[index] = graph.insertVertex(parent, 
-								model.unidades[index].unique, 
-								role, model.unidades[index].x, 
-								model.unidades[index].y, 
+								model.roles[index].unique, 
+								role, model.roles[index].x, 
+								model.roles[index].y, 
 								40, 50, 
 								'shape=roleShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
 						}
+
+						var soloMetas = [];
+						for (let index = 0; index < model.metas.length; index++) {
+							let goal = new window.CustomGoalObject();
+							goal.identifier = model.metas[index].identifier;
+							goal.name = model.metas[index].name;
+							goal.type = model.metas[index].type;
+							let parent = graph.getDefaultParent();
+							soloMetas[index] = graph.insertVertex(parent, 
+								model.metas[index].unique, 
+								goal, model.metas[index].x, 
+								model.metas[index].y, 
+								40, 50, 
+								'shape=goalShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
+						}
+
+						var soloMetas = [];
+						for (let index = 0; index < model.metas.length; index++) {
+							let goal = new window.CustomGoalObject();
+							goal.identifier = model.metas[index].identifier;
+							goal.name = model.metas[index].name;
+							goal.type = model.metas[index].type;
+							let parent = graph.getDefaultParent();
+							soloMetas[index] = graph.insertVertex(parent, 
+								model.metas[index].unique, 
+								goal, model.metas[index].x, 
+								model.metas[index].y, 
+								40, 50, 
+								'shape=goalShape;fillColor=#33C9FA;strokeWidth=3;resizable=0;fontSize=12;fontFamily=Arial;strokeColor=#000000;align=center;');
+						}
+
 
 						//ESTO NO SE MUEVE DE AQUÍ
 						graph.refresh();

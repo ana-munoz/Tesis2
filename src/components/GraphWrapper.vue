@@ -666,7 +666,7 @@
                     let container = document.getElementById('container');
                     container.style.position = 'absolute';
                     container.style.overflow = 'no-scroll';
-                    container.style.left = '150px';
+                    container.style.left = '155px';
                     container.style.top = '0px';
                     container.style.right = '0px';
                     container.style.bottom = '0px';
@@ -681,7 +681,7 @@
                     sidebar.style.padding = '0px';
                     sidebar.style.left = '0px';
                     sidebar.style.top = '0px';
-                    sidebar.style.width = '150px';
+                    sidebar.style.width = '155px';
                     sidebar.style.bottom = '0px';
                     sidebar.style.display = 'flex';
                     sidebar.style.flexDirection = 'column';

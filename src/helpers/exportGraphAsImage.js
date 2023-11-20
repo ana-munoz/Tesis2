@@ -257,73 +257,6 @@ function exportModelJson(graph){
 function exportGraphAsImage(graph){
 
 
-	let exportSvgBtn = document.body.appendChild(mxUtils.button('Exportar SVG', function()
-	{
-		var background = '#ffffff';
-		var scale = 1;
-		var border = 1;
-		
-		var imgExport = new mxImageExport();
-		var bounds = graph.getGraphBounds();
-		var vs = graph.view.scale;
-
-		// Prepares SVG document that holds the output
-		var svgDoc = mxUtils.createXmlDocument();
-		var root = (svgDoc.createElementNS != null) ?
-				svgDoc.createElementNS(mxConstants.NS_SVG, 'svg') : svgDoc.createElement('svg');
-		
-		if (background != null)
-		{
-			if (root.style != null)
-			{
-				root.style.backgroundColor = background;
-			}
-			else
-			{
-				root.setAttribute('style', 'background-color:' + background);
-			}
-		}
-		
-		if (svgDoc.createElementNS == null)
-		{
-			root.setAttribute('xmlns', mxConstants.NS_SVG);
-			root.setAttribute('xmlns:xlink', mxConstants.NS_XLINK);
-		}
-		else
-		{
-			// KNOWN: Ignored in IE9-11, adds namespace for each image element instead. No workaround.
-			root.setAttributeNS('http://www.w3.org/2000/xmlns/', 'xmlns:xlink', mxConstants.NS_XLINK);
-		}
-		
-		root.setAttribute('width', (Math.ceil(bounds.width * scale / vs) + 2 * border) + 'px');
-		root.setAttribute('height', (Math.ceil(bounds.height * scale / vs) + 2 * border) + 'px');
-		root.setAttribute('version', '1.1');
-		
-		// Adds group for anti-aliasing via transform
-		var group = (svgDoc.createElementNS != null) ?
-				svgDoc.createElementNS(mxConstants.NS_SVG, 'g') : svgDoc.createElement('g');
-		group.setAttribute('transform', 'translate(0.5,0.5)');
-		root.appendChild(group);
-		svgDoc.appendChild(root);
-
-		// Renders graph. Offset will be multiplied with state's scale when painting state.
-		var svgCanvas = new mxSvgCanvas2D(group);
-		svgCanvas.translate(Math.floor((border / scale - bounds.x) / vs), Math.floor((border / scale - bounds.y) / vs));
-		svgCanvas.scale(scale / vs);
-
-		// Displayed if a viewer does not support foreignObjects (which is needed to HTML output)
-		svgCanvas.foAltText = '[Not supported by viewer]';
-		imgExport.drawState(graph.getView().getState(graph.model.root), svgCanvas);
-
-		var xml = encodeURIComponent(mxUtils.getXml(root));
-		new mxXmlRequest('http://localhost:8080/echo', 'filename=export.svg&format=svg' + '&xml=' + xml).simulate(document, '_blank');
-	}));
-	exportSvgBtn.style.position = 'absolute';
-	exportSvgBtn.style.top = '80px';
-	exportSvgBtn.style.right = '4px';
-	exportSvgBtn.style.width = '73px';
-	exportSvgBtn.setAttribute("class", "button");
-
 	let exportJSONbtn = document.body.appendChild(mxUtils.button('Exportar JSON', function() {
 		console.log("exportando JSON...");
 		var modelString = exportModelJson(graph);
@@ -367,7 +300,7 @@ function exportGraphAsImage(graph){
     
 	}));
 	exportJSONbtn.style.position = 'absolute';
-	exportJSONbtn.style.top = '200px';
+	exportJSONbtn.style.top = '122px';
 	exportJSONbtn.style.right = '4px';
 	exportJSONbtn.style.width = '73px';
 	exportJSONbtn.setAttribute("class", "button");
@@ -517,7 +450,7 @@ function exportGraphAsImage(graph){
 
 
 	importJSONbtn.style.position = 'absolute';
-	importJSONbtn.style.top = '240px';
+	importJSONbtn.style.top = '80px';
 	importJSONbtn.style.right = '4px';
 	importJSONbtn.style.width = '73px';
 	importJSONbtn.setAttribute("class", "button");
@@ -594,18 +527,6 @@ function exportGraphAsImage(graph){
 			simulate(document, '_blank');
 	}
 	
-	// Exporting to bitmap using ExportServlet
-	let exportPngBtn = document.body.appendChild(mxUtils.button('Exportar PNG', function()
-	{
-		exportFile('png');
-	}));
-	exportPngBtn.style.position = 'absolute';
-	exportPngBtn.style.top = '120px';
-	exportPngBtn.style.right = '4px';
-	exportPngBtn.style.width = '73px';
-	exportPngBtn.setAttribute("class", "button");
-	
-
 } 
 
 export default exportGraphAsImage;

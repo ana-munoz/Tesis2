@@ -20,7 +20,7 @@ function zoom(graph){
     }));	
     
     buttonZoomIn.style.position = 'absolute';    
-    buttonZoomIn.style.top = '27px';
+    buttonZoomIn.style.top = '30px';
     buttonZoomIn.style.right = '4px';
     buttonZoomIn.style.width = '73px';
     buttonZoomIn.setAttribute("class", "button");
@@ -40,7 +40,7 @@ function zoom(graph){
     }));	
     
     buttonZoomOut.style.position = 'absolute';    
-    buttonZoomOut.style.top = '50px';
+    buttonZoomOut.style.top = '55px';
     buttonZoomOut.style.right = '4px';
     buttonZoomOut.style.width = '73px';
     buttonZoomOut.setAttribute("class", "button");

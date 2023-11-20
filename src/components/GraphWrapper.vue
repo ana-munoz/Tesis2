@@ -1,16 +1,10 @@
 <template>
     <div>
-        <!-- div for navigation bar-->
-        <!--
-        <div id="navbar">
-            <nav-bar/>
-        </div>
-        -->
         <!-- div for side bar-->
         <div id="sidebar">
             <div id="panelTitle"
                 style="height: 30px;font-family: Arial, Helvetica, sans-serif; color: #ffffff;vertical-align:baseline;">
-                <p>LiteStrat</p>
+                <p>LiteStrat Modeller</p>
             </div>
             <div id="icons">
             </div>
@@ -445,105 +439,199 @@
                 
                 let sidebaricons = document.getElementById('icons');
 
-                   // Actor concept wrapper
+                // Actor concept wrapper
                 let actorWrapper = document.createElement('div');
                 actorWrapper.style.cursor = 'pointer';
                 actorWrapper.style.margin = '10px';
-                actorWrapper.style.width = '60px';
+                actorWrapper.style.width = '115px'; // Increased width to accommodate label
                 actorWrapper.style.height = '60px';
                 actorWrapper.style.textAlign = 'center';
                 actorWrapper.style.display = 'flex';
                 actorWrapper.style.flexWrap = 'wrap';
                 actorWrapper.style.alignItems = 'center';
                 actorWrapper.style.justifyContent = 'center';
-                //actorWrapper.style.border = '1px dashed #C0C0C0';
-                actorWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/actor.png></div>';
-                sidebaricons.appendChild(actorWrapper);  
+                // actorWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let actorImage = document.createElement('div');
+                actorImage.innerHTML = '<img src="' + mxImageBasePath + '/actor.png" style="max-width: 100%; max-height: 100%;">';
+                actorWrapper.appendChild(actorImage);
+
+                // Create label element
+                let actorLabel = document.createElement('div');
+                actorLabel.innerText = 'Actor';
+                actorLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                actorLabel.style.fontSize = '14px'; // Set the font size
+                actorLabel.style.fontWeight = 'bold'; // Set the font weight
+                actorLabel.style.color = 'white';
+                actorWrapper.appendChild(actorLabel);
+
+                sidebaricons.appendChild(actorWrapper);
+
 
                  // Agent concept wrapper
                 let agentWrapper = document.createElement('div');
                 agentWrapper.style.cursor = 'pointer';
                 agentWrapper.style.margin = '10px';
-                agentWrapper.style.width = '60px';
+                agentWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 agentWrapper.style.height = '60px';
                 agentWrapper.style.textAlign = 'center';
                 agentWrapper.style.display = 'flex';
-                agentWrapper.style.flexWrap = 'wrap';
                 agentWrapper.style.alignItems = 'center';
-                agentWrapper.style.justifyContent = 'center';
-                //agentWrapper.style.border = '1px dashed #C0C0C0';
-                agentWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/agent.png></div>';
+                // agentWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let agentImage = document.createElement('div');
+                agentImage.style.marginRight = '10px'; // Adjust the margin as needed
+                agentImage.innerHTML = '<img src="' + mxImageBasePath + '/agent.png" style="max-width: 100%; max-height: 100%;">';
+                agentWrapper.appendChild(agentImage);
+
+                // Create label element
+                let agentLabel = document.createElement('div');
+                agentLabel.innerText = 'Unidad'; // Set your label text here
+                agentLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                agentLabel.style.fontSize = '14px'; // Set the font size
+                agentLabel.style.fontWeight = 'bold'; // Set the font weight
+                agentLabel.style.color = 'white'; // Set the font color
+                agentWrapper.appendChild(agentLabel);
+
                 sidebaricons.appendChild(agentWrapper);
 
                 let roleWrapper = document.createElement('div');
                 roleWrapper.style.cursor = 'pointer';
                 roleWrapper.style.margin = '10px';
-                roleWrapper.style.width = '60px';
+                roleWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 roleWrapper.style.height = '60px';
                 roleWrapper.style.textAlign = 'center';
                 roleWrapper.style.display = 'flex';
-                roleWrapper.style.flexWrap = 'wrap';
                 roleWrapper.style.alignItems = 'center';
-                roleWrapper.style.justifyContent = 'center';
-                //roleWrapper.style.border = '1px dashed #C0C0C0';
-                roleWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/role.png></div>';
+                // roleWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let roleImage = document.createElement('div');
+                roleImage.style.marginRight = '10px'; // Adjust the margin as needed
+                roleImage.innerHTML = '<img src="' + mxImageBasePath + '/role.png" style="max-width: 100%; max-height: 100%;">';
+                roleWrapper.appendChild(roleImage);
+
+                // Create label element
+                let roleLabel = document.createElement('div');
+                roleLabel.innerText = 'Rol'; // Set your label text here
+                roleLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                roleLabel.style.fontSize = '14px'; // Set the font size
+                roleLabel.style.fontWeight = 'bold'; // Set the font weight
+                roleLabel.style.color = 'white'; // Set the font color to white
+                roleWrapper.appendChild(roleLabel);
+
                 sidebaricons.appendChild(roleWrapper);
-                
+
                 let goalWrapper = document.createElement('div');
                 goalWrapper.style.cursor = 'pointer';
                 goalWrapper.style.margin = '10px';
-                goalWrapper.style.width = '60px';
+                goalWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 goalWrapper.style.height = '60px';
                 goalWrapper.style.textAlign = 'center';
                 goalWrapper.style.display = 'flex';
-                goalWrapper.style.flexWrap = 'wrap';
                 goalWrapper.style.alignItems = 'center';
-                goalWrapper.style.justifyContent = 'center';
-                //goalWrapper.style.border = '1px dashed #C0C0C0';
-                goalWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/goal.png></div>';
+                // goalWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let goalImage = document.createElement('div');
+                goalImage.style.marginRight = '10px'; // Adjust the margin as needed
+                goalImage.innerHTML = '<img src="' + mxImageBasePath + '/goal.png" style="max-width: 100%; max-height: 100%;">';
+                goalWrapper.appendChild(goalImage);
+
+                // Create label element
+                let goalLabel = document.createElement('div');
+                goalLabel.innerText = 'Meta'; // Set your label text here
+                goalLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                goalLabel.style.fontSize = '14px'; // Set the font size
+                goalLabel.style.fontWeight = 'bold'; // Set the font weight
+                goalLabel.style.color = 'white'; // Set the font color to white
+                goalWrapper.appendChild(goalLabel);
+
                 sidebaricons.appendChild(goalWrapper);
-                
+
                 let strategyWrapper = document.createElement('div');
                 strategyWrapper.style.cursor = 'pointer';
                 strategyWrapper.style.margin = '10px';
-                strategyWrapper.style.width = '60px';
+                strategyWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 strategyWrapper.style.height = '60px';
                 strategyWrapper.style.textAlign = 'center';
                 strategyWrapper.style.display = 'flex';
-                strategyWrapper.style.flexWrap = 'wrap';
                 strategyWrapper.style.alignItems = 'center';
-                strategyWrapper.style.justifyContent = 'center';
-                //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                strategyWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/strategy.png></div>';
+                // strategyWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let strategyImage = document.createElement('div');
+                strategyImage.style.marginRight = '10px'; // Adjust the margin as needed
+                strategyImage.innerHTML = '<img src="' + mxImageBasePath + '/strategy.png" style="max-width: 100%; max-height: 100%;">';
+                strategyWrapper.appendChild(strategyImage);
+
+                // Create label element
+                let strategyLabel = document.createElement('div');
+                strategyLabel.innerText = 'Estrategia'; // Set your label text here
+                strategyLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                strategyLabel.style.fontSize = '14px'; // Set the font size
+                strategyLabel.style.fontWeight = 'bold'; // Set the font weight
+                strategyLabel.style.color = 'white'; // Set the font color to white
+                strategyWrapper.appendChild(strategyLabel);
+
                 sidebaricons.appendChild(strategyWrapper);
 
                 let tacticWrapper = document.createElement('div');
                 tacticWrapper.style.cursor = 'pointer';
                 tacticWrapper.style.margin = '10px';
-                tacticWrapper.style.width = '60px';
+                tacticWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 tacticWrapper.style.height = '60px';
                 tacticWrapper.style.textAlign = 'center';
                 tacticWrapper.style.display = 'flex';
-                tacticWrapper.style.flexWrap = 'wrap';
                 tacticWrapper.style.alignItems = 'center';
-                tacticWrapper.style.justifyContent = 'center';
-                //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                tacticWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/tactica.png></div>';
+                // tacticWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let tacticImage = document.createElement('div');
+                tacticImage.style.marginRight = '10px'; // Adjust the margin as needed
+                tacticImage.innerHTML = '<img src="' + mxImageBasePath + '/tactica.png" style="max-width: 100%; max-height: 100%;">';
+                tacticWrapper.appendChild(tacticImage);
+
+                // Create label element
+                let tacticLabel = document.createElement('div');
+                tacticLabel.innerText = 'Táctica'; // Set your label text here
+                tacticLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                tacticLabel.style.fontSize = '14px'; // Set the font size
+                tacticLabel.style.fontWeight = 'bold'; // Set the font weight
+                tacticLabel.style.color = 'white'; // Set the font color to white
+                tacticWrapper.appendChild(tacticLabel);
+
                 sidebaricons.appendChild(tacticWrapper);
 
                 let objWrapper = document.createElement('div');
                 objWrapper.style.cursor = 'pointer';
                 objWrapper.style.margin = '10px';
-                objWrapper.style.width = '60px';
+                objWrapper.style.width = '150px'; // Increased width to accommodate label and image
                 objWrapper.style.height = '60px';
                 objWrapper.style.textAlign = 'center';
                 objWrapper.style.display = 'flex';
-                objWrapper.style.flexWrap = 'wrap';
                 objWrapper.style.alignItems = 'center';
-                objWrapper.style.justifyContent = 'center';
-                //strategyWrapper.style.border = '1px dashed #C0C0C0';
-                objWrapper.innerHTML = '<div><img src='+mxImageBasePath +'/objetivo.png></div>';
+                // objWrapper.style.border = '1px dashed #C0C0C0';
+
+                // Create image element
+                let objImage = document.createElement('div');
+                objImage.style.marginRight = '10px'; // Adjust the margin as needed
+                objImage.innerHTML = '<img src="' + mxImageBasePath + '/objetivo.png" style="max-width: 100%; max-height: 100%;">';
+                objWrapper.appendChild(objImage);
+
+                // Create label element
+                let objLabel = document.createElement('div');
+                objLabel.innerText = 'Objetivo'; // Set your label text here
+                objLabel.style.fontFamily = 'Arial, sans-serif'; // Set the font family
+                objLabel.style.fontSize = '14px'; // Set the font size
+                objLabel.style.fontWeight = 'bold'; // Set the font weight
+                objLabel.style.color = 'white'; // Set the font color to white
+                objWrapper.appendChild(objLabel);
+
                 sidebaricons.appendChild(objWrapper);
+
 
                 // Creates the image which is used as the drag icon (preview)
                 let dragImageActor = actorWrapper.cloneNode(true);
@@ -578,7 +666,7 @@
                     let container = document.getElementById('container');
                     container.style.position = 'absolute';
                     container.style.overflow = 'no-scroll';
-                    container.style.left = '100px';
+                    container.style.left = '150px';
                     container.style.top = '0px';
                     container.style.right = '0px';
                     container.style.bottom = '0px';
@@ -593,7 +681,7 @@
                     sidebar.style.padding = '0px';
                     sidebar.style.left = '0px';
                     sidebar.style.top = '0px';
-                    sidebar.style.width = '100px';
+                    sidebar.style.width = '150px';
                     sidebar.style.bottom = '0px';
                     sidebar.style.display = 'flex';
                     sidebar.style.flexDirection = 'column';

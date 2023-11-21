@@ -13,7 +13,9 @@
     "mxgraph": "^4.0.5",
     "sweetalert": "^2.1.2",
     "sweetalert2": "^11.7.31",
-    "vue": "^2.6.10"
+    "vkbeautify": "^0.99.3",
+    "vue": "^2.6.10",
+    "xmltojson": "^1.3.5"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.0",

@@ -1,8 +1,9 @@
 import axios from "axios";
 import swal from "sweetalert";
+import vkbeautify from "vkbeautify";
 
-function exportModelJson(graph){
-	graph.selectAll();
+//function exportModelJson(graph){
+	/*graph.selectAll();
 	var selection = graph.getSelectionCells();
 	var model = 
 	{
@@ -139,9 +140,9 @@ function exportModelJson(graph){
 						y: unidad.getChildAt(hijo_nro).geometry.y
 					} 
 					model.objetivos.push(objetivo);
-				}
+				}*/
 				/* DESDE AQUÍ SE ITERA SOBRE LOS CONSTRUCTOS ANIDADOS DENTRO DE UNO O MÁS ROLES */
-				if(unidad.getChildAt(hijo_nro).value.type == "Rol") {
+				/*if(unidad.getChildAt(hijo_nro).value.type == "Rol") {
 					var rol_padre = unidad.getChildAt(hijo_nro);
                 	var hijos_rol = rol_padre.getChildCount();
 					var rol = {
@@ -252,60 +253,85 @@ function exportModelJson(graph){
     return modelString;
 	
 
-}
+}*/
 
 function exportGraphAsImage(graph){
 
 
-	let exportJSONbtn = document.body.appendChild(mxUtils.button('Exportar JSON', function() {
-		console.log("exportando JSON...");
-		var modelString = exportModelJson(graph);
-
-        function copyClipboard(text) {
-            var x = document.createElement("textarea");
-            document.body.appendChild(x);
-            x.value = text;
-            x.select();
-            document.execCommand("copy");
-            document.body.removeChild(x);
-        }
-
-        swal({
-            title: "Export Model",
-            text: modelString,
-            className: 'view-model',
-            buttons: {
-                copyclipboard: {
-                    text: "Copy Clipboard"
-                },
-                close: {
-                    text: "Close"
-                },
-            },
-        })
-        .then((value) => {
-            switch (value) {
-                case "copyclipboard":
-                    swal("Copied", "The model has been copied to the clipboard", "success",{
-                        className: 'view-model-normal',
-                    });
-                    copyClipboard(modelString);
-                    break;
-                case "close":
-                    break;
-            }
-        });
-
-        window.scrollTo(0, 0);
-    
-	}));
+	// Function to export the graph to XML
+	function exportGraphToXml() {
+		var model = graph.getModel();
+		var encoder = new mxCodec();
+		var xml = encoder.encode(model);
+		var xmlString = mxUtils.getXml(xml);
+	  
+		// Wrap JSON-like content with CDATA
+		var jsonLikeContent = '{"definition":"Meta","identifier":"Meta","name":"Meta","type":"Meta","customShape":"goalShape","width":"120","height":"40"}';
+		xmlString = xmlString.replace(jsonLikeContent, '<![CDATA[' + jsonLikeContent + ']]>');
+	  
+		// Output to console
+		console.log('Exported XML:');
+		console.log(xmlString);
+	  
+		// You can also copy the xmlString to clipboard here if needed
+	  }
+	/*function exportGraphToXml() {
+		var model = graph.getModel();
+		var encoder = new mxCodec();
+		var xml = encoder.encode(model);
+		var xmlString = mxUtils.getXml(xml);
+	  
+		// Format the XML using vkbeautify
+		var formattedXml = vkbeautify.xml(xmlString);
+	  
+		function copyClipboard(text) {
+		  var x = document.createElement("textarea");
+		  document.body.appendChild(x);
+		  x.value = text;
+		  x.select();
+		  document.execCommand("copy");
+		  document.body.removeChild(x);
+		}
+	  
+		swal({
+		  title: "Export Model",
+		  text: formattedXml, // Display the formatted XML
+		  className: 'view-model',
+		  buttons: {
+			copyclipboard: {
+			  text: "Copy Clipboard"
+			},
+			close: {
+			  text: "Close"
+			},
+		  },
+		})
+		.then((value) => {
+		  switch (value) {
+			case "copyclipboard":
+			  swal("Copied", "The model has been copied to the clipboard", "success", {
+				className: 'view-model-normal',
+			  });
+			  copyClipboard(formattedXml);
+			  break;
+			case "close":
+			  break;
+		  }
+		});
+	  
+		window.scrollTo(0, 0);
+	  }*/
+  
+  // Assuming exportJSONbtn is your button
+  var exportJSONbtn = document.body.appendChild(mxUtils.button('Exportar JSON', exportGraphToXml));
+  
 	exportJSONbtn.style.position = 'absolute';
 	exportJSONbtn.style.top = '122px';
 	exportJSONbtn.style.right = '4px';
 	exportJSONbtn.style.width = '73px';
 	exportJSONbtn.setAttribute("class", "button");
 
-	let importJSONbtn = document.body.appendChild(mxUtils.button('Importar JSON', function()
+	/*let importJSONbtn = document.body.appendChild(mxUtils.button('Importar JSON', function()
     {        
         var modelEntered;
         var loadedIdentifier;
@@ -322,11 +348,7 @@ function exportGraphAsImage(graph){
             if (modelEntered == null || modelEntered == "") {
                 //alert("Canceled");
                 if(modelEntered == null){
-                    /*
-                    swal("Canceled", "", "error", {
-                        dangerMode: true
-                    });
-                    */
+                    
                 }
                 if(modelEntered == ""){
                     swal("Vacío", "", "error", {
@@ -337,10 +359,10 @@ function exportGraphAsImage(graph){
 				if(modelEntered.includes('"actores":')&&
 					modelEntered.includes('"unidades":')&&
 					modelEntered.includes('"roles":')&&
-					modelEntered.includes('"metas":')/*&&
+					modelEntered.includes('"metas":')&&
 					modelEntered.includes('"estartegias":')&&
 					modelEntered.includes('"tacticas":')&&
-					modelEntered.includes('"objetivos":') */
+					modelEntered.includes('"objetivos":') 
 					){
 
                 	graph.getModel().beginUpdate();
@@ -445,10 +467,35 @@ function exportGraphAsImage(graph){
 				}
 			
 			}})
-	}));
-
-
-
+	}));*/
+	// Function to import the graph from XML
+	function importGraphFromXml() {
+		// Prompt for XML input
+		var xmlInput = prompt('Paste XML here:');
+	  
+		try {
+		  var parser = new DOMParser();
+		  var doc = parser.parseFromString(xmlInput, 'application/xml');
+	  
+		  // Check for parsing errors
+		  if (doc.getElementsByTagName('parsererror').length > 0) {
+			console.error('XML Parsing Error:', doc.getElementsByTagName('parsererror')[0].textContent);
+			throw new Error('XML Parsing Error');
+		  }
+	  
+		  var model = graph.getModel();
+		  var decoder = new mxCodec(doc);
+		  decoder.decode(doc.documentElement, model);
+		  graph.refresh();
+		  console.log('Import Successful: Graph has been imported successfully!');
+		} catch (error) {
+		  console.error('Import Failed:', error);
+		}
+	  }
+	  
+  // Assuming importJSONbtn is your import button
+  var importJSONbtn = document.body.appendChild(mxUtils.button('Importar JSON', importGraphFromXml));
+  
 	importJSONbtn.style.position = 'absolute';
 	importJSONbtn.style.top = '80px';
 	importJSONbtn.style.right = '4px';
@@ -487,46 +534,6 @@ function exportGraphAsImage(graph){
     buttonPreview.style.width = '72px';
     buttonPreview.setAttribute("class", "button");
 
-
-	
-	function exportFile(format)
-	{
-		var bg = '#ffffff';
-		var scale = 1;
-		var b = 1;
-		
-		var imgExport = new mxImageExport();
-		var bounds = graph.getGraphBounds();
-		var vs = graph.view.scale;
-		
-		// New image export
-		var xmlDoc = mxUtils.createXmlDocument();
-		var root = xmlDoc.createElement('output');
-		xmlDoc.appendChild(root);
-		
-		// Renders graph. Offset will be multiplied with state's scale when painting state.
-		var xmlCanvas = new mxXmlCanvas2D(root);
-		xmlCanvas.translate(Math.floor((b / scale - bounds.x) / vs), Math.floor((b / scale - bounds.y) / vs));
-		xmlCanvas.scale(scale / vs);
-		
-		imgExport.drawState(graph.getView().getState(graph.model.root), xmlCanvas);
-
-		// Puts request data together
-		var w = Math.ceil(bounds.width * scale / vs + 2 * b);
-		var h = Math.ceil(bounds.height * scale / vs + 2 * b);
-		
-		var xml = mxUtils.getXml(root);
-			
-		if (bg != null)
-		{
-			bg = '&bg=' + bg;
-		}
-		
-		new mxXmlRequest('http://localhost:8080/export', 'filename=export.' + format + '&format=' + format +
-			bg + '&w=' + w + '&h=' + h + '&xml=' + encodeURIComponent(xml)).
-			simulate(document, '_blank');
-	}
-	
 } 
 
 export default exportGraphAsImage;

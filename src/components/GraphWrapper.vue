@@ -155,7 +155,6 @@
         this.customShape = 'agentShape';
         this.width = '75';
         this.height = '75';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -169,7 +168,6 @@
         this.customShape = 'roleShape';
         this.width = '75';
         this.height = '75';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -184,7 +182,6 @@
         this.customShape = 'goalShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -199,7 +196,6 @@
         this.customShape = 'strategyShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -213,7 +209,6 @@
         this.customShape = 'tacticShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         };
@@ -227,7 +222,6 @@
         this.customShape = 'objShape';
         this.width = '120';
         this.height = '40';
-        this.parentShape = parentShape || null;
         this.clone = function () {
             return mxUtils.clone(this);
         }

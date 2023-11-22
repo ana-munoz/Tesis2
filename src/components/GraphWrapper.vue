@@ -376,7 +376,7 @@
                                 
                             } else {
                             newParent = graph.getDefaultParent();  //este else impide que si arrastro un constructo != objeto, no lo anide; si suelto un constructo en el canvas y luego lo arrastro dentro del rol, se anida. Esto ultimo no debiera pasar.                          
-                            alert("Alerta: dentro de un Rol sólo se anidan objetivos.")
+                            alert("Alerta: conexión no válida.")
                             }
                         } else {
                             newParent = graph.getDefaultParent();                            
@@ -802,7 +802,7 @@
                     
                     // CHANGE CELLS VALUES IN A EDITOR
                     
-                    editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => { 
+                    /*editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => { 
                         this.selectionChanged();
                     });
                     this.selectionChanged();
@@ -815,7 +815,31 @@
 
                     // not editable
                     editor.graph.isCellEditable = function () { //tiene que ser editable porque sino no se puede cambiar el nombre del constructo
-                        return false
+                        return true
+                    };
+                    
+                    // Returns the name propertie of the user object for the label
+                    editor.graph.convertValueToString = function (cell) {
+                        if (cell.value != null && cell.value.name != null) {
+                            return cell.value.name;
+                            
+                        }
+                        return mxGraph.prototype.convertValueToString.apply(this, arguments); // "supercall"
+                    };*/
+                    editor.graph.getSelectionModel().addListener(mxEvent.CHANGE, () => { 
+                        this.selectionChanged();
+                    });
+                    this.selectionChanged();
+                    
+                    // Fields are dynamically created HTML labels
+                    /*editor.graph.isHtmlLabel = function (cell) {
+                        return !this.isSwimlane(cell) &&
+                            !this.model.isEdge(cell);
+                    };*/
+
+                    // not editable
+                    editor.graph.isCellEditable = function () { //tiene que ser editable porque sino no se puede cambiar el nombre del constructo
+                        return true
                     };
                     
                     // Returns the name propertie of the user object for the label
@@ -826,6 +850,7 @@
                         }
                         return mxGraph.prototype.convertValueToString.apply(this, arguments); // "supercall"
                     };
+
                     
 
                     

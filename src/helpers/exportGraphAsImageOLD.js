@@ -10,6 +10,261 @@ import xmltojson from "xmltojson";
 	var result = xmlToJSON.parseString(testString);   // parses to JSON object
 	mxUtils.popup(JSON.stringify(result, null, 4), true); // turns into string
 } */
+
+/*
+function exportModelJson(graph){
+	graph.selectAll();
+	var selection = graph.getSelectionCells();
+	var model = 
+	{
+		"actores": [],
+		"unidades": [],
+		"roles": [],
+		"metas": [],
+		"estrategias": [],
+		"tacticas": [],
+		"objetivos": [],
+		"influencias": [],
+		"refinamientos": []
+	};
+	
+	//var currentId = document.getElementsByClassName("modelIdentifier")[0].textContent;
+
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "Actor"){
+            var actor = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+            }
+            model.actores.push(actor);
+        }
+    }
+
+	for (let index = 0; index < selection.length; index++) {
+        if(selection[index].value.type == "UnidadOrganizacional"){
+            var unidad = selection[index];
+			var hijos = unidad.getChildCount();
+			var unidadOrganizacional = {
+                unique: selection[index].id,
+                identifier: selection[index].value.identifier,
+                name: selection[index].value.name,
+                type: selection[index].value.type,
+				parentShape: selection[index].value.parentCell,
+                x: selection[index].geometry.x,
+                y: selection[index].geometry.y
+			}
+			//console.log("hijos", hijos)
+			for (let hijo_nro = 0; hijo_nro < hijos; hijo_nro++) {
+				console.log("test,", unidad.getChildAt(hijo_nro).value.name); //if para pushear los consturctos anidados
+				
+				var item = unidad.getChildAt(hijo_nro).value;
+
+				if(unidad.getChildAt(hijo_nro).value.type == "Influencia"){
+					if(unidad.getChildAt(hijo_nro).geometry.points != null){
+						var geometryPoints = []
+						for (let a = 0; a < unidad.getChildAt(hijo_nro).geometry.points.length; a++) {
+							geometryPoints[a] = unidad.getChildAt(hijo_nro).geometry.points[a];
+						}
+						var influencia = {
+							unique: unidad.getChildAt(hijo_nro).id,
+							identifier: unidad.getChildAt(hijo_nro).value.identifier,
+							name: unidad.getChildAt(hijo_nro).value.name,
+							type: unidad.getChildAt(hijo_nro).value.type,
+							source: unidad.getChildAt(hijo_nro).source.id,
+							target: unidad.getChildAt(hijo_nro).target.id,
+							"points": geometryPoints
+						}
+						model.influencias.push(influencia);
+					} else {
+						var influencia = {
+							unique: unidad.getChildAt(hijo_nro).id,
+							identifier: unidad.getChildAt(hijo_nro).value.identifier,
+							name: unidad.getChildAt(hijo_nro).value.name,
+							type: unidad.getChildAt(hijo_nro).value.type,
+							source: unidad.getChildAt(hijo_nro).source.id,
+							target: unidad.getChildAt(hijo_nro).target.id,
+						}
+						model.influencias.push(influencia);
+					}
+				}
+				if(unidad.getChildAt(hijo_nro).value.type == "Refinamiento"){
+					var refinamiento = {
+						unique: unidad.getChildAt(hijo_nro).id,
+						identifier: unidad.getChildAt(hijo_nro).value.identifier,
+						name: unidad.getChildAt(hijo_nro).value.name,
+						type: unidad.getChildAt(hijo_nro).value.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+					model.refinamientos.push(refinamiento);
+				}
+
+				if (unidad.getChildAt(hijo_nro).value.type == "Meta") {
+					var parentCell = unidad.getChildAt(hijo_nro).getParent();	//FLAG
+					var meta = {
+						unique: unidad.getChildAt(hijo_nro).id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						//parentShapeIdentifier: parentCell ? parentCell.value.identifier : null,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+					console.log("parent cell,", parentCell ? parentCell.value.name : null);
+					model.metas.push(meta);
+				} 
+
+				if (unidad.getChildAt(hijo_nro).value.type == "Estrategia"){
+					var estrategia = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					} 
+					model.estrategias.push(estrategia);
+				} 
+				if (unidad.getChildAt(hijo_nro).value.type == "Tactica"){
+					var tactica = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					} 
+					model.tacticas.push(tactica);
+				}
+				if (unidad.getChildAt(hijo_nro).value.type == "Objetivo"){
+					var objetivo = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					} 
+					model.objetivos.push(objetivo);
+				}*/
+				/* DESDE AQUÍ SE ITERA SOBRE LOS CONSTRUCTOS ANIDADOS DENTRO DE UNO O MÁS ROLES */
+				/*if(unidad.getChildAt(hijo_nro).value.type == "Rol") {
+					var rol_padre = unidad.getChildAt(hijo_nro);
+                	var hijos_rol = rol_padre.getChildCount();
+					var rol = {
+						unique: item.id,
+						identifier: item.identifier,
+						name: item.name,
+						type: item.type,
+						x: unidad.getChildAt(hijo_nro).geometry.x,
+						y: unidad.getChildAt(hijo_nro).geometry.y
+					}
+					console.log("hijos rol", hijos_rol)
+					for (let hijo_rol_nro = 0; hijo_rol_nro < hijos_rol; hijo_rol_nro++) {
+						
+						var itemRol = rol_padre.getChildAt(hijo_rol_nro).value;
+						
+						console.log("hijos padre,", rol_padre.getChildAt(hijo_rol_nro).value.name);
+						
+						if(rol_padre.getChildAt(hijo_rol_nro).value.type == "Meta"){
+							var meta = {
+								unique: rol_padre.getChildAt(hijo_rol_nro).id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							}
+							model.metas.push(meta);
+						} 
+		
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Estrategia"){
+							var estrategia = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.estrategias.push(estrategia);
+						} 
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Tactica"){
+							var tactica = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.tacticas.push(tactica);
+						}
+						if (rol_padre.getChildAt(hijo_rol_nro).value.type == "Objetivo"){
+							var objetivo = {
+								unique: itemRol.id,
+								identifier: itemRol.identifier,
+								name: itemRol.name,
+								type: itemRol.type,
+								x: rol_padre.getChildAt(hijo_rol_nro).geometry.x,
+								y: rol_padre.getChildAt(hijo_rol_nro).geometry.y
+							} 
+							model.objetivos.push(objetivo);
+						}
+					}
+					model.roles.push(rol);
+				} 
+			}
+			
+            model.unidades.push(unidadOrganizacional);
+        }
+    }
+	//getChildCount (para iterar); getChildAt(saca con un indice)
+
+	for (let index = 0; index < selection.length; index++){
+		if(selection[index].value.type == "Influencia"){
+			if(selection[index].geometry.points != null){
+				var geometryPoints = []
+				for (let a = 0; a < selection[index].geometry.points.length; a++) {
+					geometryPoints[a] = selection[index].geometry.points[a];
+				}
+				var influencia = {
+					unique: selection[index].id,
+					identifier: selection[index].value.identifier,
+					name: selection[index].value.name,
+					type: selection[index].value.type,
+					source: selection[index].source.id,
+                    target: selection[index].target.id,
+                    "points": geometryPoints
+				}
+				model.influencias.push(influencia);
+			} else {
+				var influencia = {
+					unique: selection[index].id,
+                    identifier: selection[index].value.identifier,
+                    name: selection[index].value.name,
+                    type: selection[index].value.type,
+                    source: selection[index].source.id,
+                    target: selection[index].target.id
+				}
+				model.influencias.push(influencia);
+			}
+		}
+	}
+
+
+	console.log("Modelo JSON...", model);
+
+    var modelString = JSON.stringify(model, null, 4);    
+    return modelString;
+	
+
+}*/
+
 function exportGraphToXml() {
   var model = graph.getModel();
   var encoder = new mxCodec();

@@ -2,7 +2,7 @@
 # Se puede cambiar por la versión de node que tu quieras
 FROM node:14 AS build-stage 
 # Directorio de trabajo, lo puedes ajustar a tu gusto
-WORKDIR /app
+WORKDIR /TESIS2
 # comando para copiar el package.json y el package-lock.json
 # esto es para que no se instalen las dependencias cada vez que se haga un cambio
 COPY package*.json ./

@@ -1,5 +1,6 @@
 //import axios from "axios";
 import swal from "sweetalert";
+import clipboardInit from "../helpers/clipboard";
 //import vkbeautify from "vkbeautify";
 
 function exportGraphAsImage(graph){
@@ -10,18 +11,36 @@ function exportGraphAsImage(graph){
 		var encoder = new mxCodec();
 		var xml = encoder.encode(model);
 		var xmlString = mxUtils.getXml(xml);
-	  
+	
 		// Wrap JSON-like content with CDATA
 		var jsonLikeContent = '{"definition":"Meta","identifier":"Meta","name":"Meta","type":"Meta","customShape":"goalShape","width":"120","height":"40"}';
-		xmlString = xmlString.replace(jsonLikeContent, '<![CDATA[' + jsonLikeContent + ']]>');
-	  
-		// Output to console
+		var wrappedContent = '<![CDATA[' + jsonLikeContent + ']]>';
+		xmlString = xmlString.replace(jsonLikeContent, wrappedContent);
+	
+		// Create a Blob containing the XML data
+		var blob = new Blob([xmlString], { type: 'text/xml' });
+	
+		// Create a URL for the Blob
+		var url = URL.createObjectURL(blob);
+	
+		// Create a link element
+		var link = document.createElement('a');
+		link.href = url;
+		link.download = 'exported_graph.xml'; // Set the file name
+	
+		// Simulate a click on the link to trigger the download
+		link.click();
+	
+		// Clean up
+		URL.revokeObjectURL(url);
+	
+		// Output to console (optional)
 		console.log('Exported XML:');
 		console.log(xmlString);
-		alert(xmlString);
-	  
-		// You can also copy the xmlString to clipboard here if needed
-	  }
+	}
+	
+	
+	
   
   // Assuming exportJSONbtn is your button
   var exportJSONbtn = document.body.appendChild(mxUtils.button('Exportar XML', exportGraphToXml));

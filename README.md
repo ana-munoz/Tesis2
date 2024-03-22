@@ -1,4 +1,4 @@
-# Tesis2
-Proyecto basado en el creado por el profe rené
+# LiteStratModeller - proyecto de título
+Herramienta de modelado para el lenguaje LiteStrat.
 
-Para ejecutar: npm run serve
+Para ejecutar de manera local: npm run serve 
